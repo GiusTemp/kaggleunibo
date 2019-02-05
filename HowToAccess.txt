@@ -1,0 +1,16 @@
+#### VIRTUAL MACHINE
+D4s Standard v3 (4 cpu virtuali, 16 GB memoria)
+
+#### SSH (or use putty)
+ssh kaggleunibo19@52.174.97.202
+
+#### USERNAME
+kaggleunibo19
+
+#### PASSWORD
+ciao1kaggle19**
+
+#### TRANSFER FROM LOCAL -> AZURE_VM (windows)
+pscp YOUR_FILE kaggleunibo19@52.174.97.202:/home/kaggleunibo19
+
+(ubuntu scp)
