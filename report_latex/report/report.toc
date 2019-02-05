@@ -1,0 +1,12 @@
+\select@language {english}
+\contentsline {chapter}{Abstract}{ii}
+\contentsline {chapter}{\numberline {1}Understanding the problem}{1}
+\contentsline {section}{\numberline {1.1}Previous studies}{1}
+\contentsline {section}{\numberline {1.2}Understanding the data}{3}
+\contentsline {chapter}{\numberline {2}A first, na{\"i}ve model}{7}
+\contentsline {section}{\numberline {2.1}Basic Feature Benchmark}{7}
+\contentsline {chapter}{\numberline {3}More advanced models comparison}{11}
+\contentsline {section}{\numberline {3.1}First model}{11}
+\contentsline {section}{\numberline {3.2}Second model}{11}
+\contentsline {section}{\numberline {3.3}Third model}{11}
+\contentsline {chapter}{Bibliography}{13}

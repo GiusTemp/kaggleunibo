@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper,openright,twoside]{report}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage[usenames, dvipsnames]{color}
+
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+\usepackage{newlfont}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{amsthm}
+
+% for code blocks highlighting
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{forestgreenweb}{rgb}{0.13, 0.55, 0.13}
+\definecolor{bostonuniversityred}{rgb}{0.8, 0.0, 0.0}
+\definecolor{battleshipgrey}{rgb}{0.52, 0.52, 0.51}
+\definecolor{whitesmoke}{rgb}{0.96, 0.96, 0.96}
+
+% set the default code style
+\lstset{
+  language={Python},
+  backgroundcolor=\color{whitesmoke},
+  basicstyle=\fontsize{7}{7}\ttfamily,
+  columns=fullflexible,
+  captionpos=b, % Position of the Caption (t for top, b for bottom)
+  extendedchars=true, % Allows 256 instead of 128 ASCII characters
+  tabsize=4, % number of spaces indented when discovering a tab
+  breaklines=true, % wrap lines if they don't fit
+  frame=trbl, % draw a frame at the top, right, left and bottom of the listing
+  numbers=left, % show line numbers at the left
+  morekeywords={as},
+  deletekeywords={max,min},
+  showstringspaces=false,
+  sensitive=true, % keywords are not case-sensitive
+  morestring=[b]', % defines that strings are enclosed in single quotes
+  commentstyle=\color{battleshipgrey},
+  numberstyle=\fontsize{7}{7}\ttfamily,
+  keywordstyle=\color{forestgreenweb}, % style of keywords
+  stringstyle=\color{bostonuniversityred}, % style of strings
+  rulecolor=\color{black}
+}
+
+\oddsidemargin=30pt \evensidemargin=20pt%impostano i margini
+\usepackage[htt]{hyphenat} %per andare a capo nei typescript
+\hyphenation{sil-la-ba-zio-ne pa-ren-te-si}%serve per la sillabazione: tra parentesi 
+
+\pagestyle{fancy}\addtolength{\headwidth}{20pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+\rhead[\fancyplain{}{\bfseries\leftmark}]{\fancyplain{}{\bfseries\thepage}}
+\cfoot{}
+
+%\linespread{1.2}                     
+
+\begin{document}
+	
+	\include{frontespizio} 
+	\clearpage{\pagestyle{empty}\cleardoublepage}%non numera l'ultima pagina sinistra
+
+	\linespread{1.2}
+	\selectfont
+	
+	\pagenumbering{roman}                   %serve per mettere i numeri romani
+	\include{Abstract}
+	\addcontentsline{toc}{chapter}{Abstract}
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+
+	\include{indice}
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+
+	\listoffigures
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	\pagenumbering{arabic}                  %mette i numeri arabi
+
+	\include{capitolo1}
+	\include{capitolo2}
+	\include{capitolo3}
+
+	\linespread{1}
+	\selectfont
+
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+	\addcontentsline{toc}{chapter}{Bibliography}
+	\bibliographystyle{plainurl}
+	\bibliography{bibl_report}
+
+\end{document}

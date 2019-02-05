@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{challenge}
+L{ANL} {E}arthquake {P}rediction.
+\newblock 2019.
+\newblock URL: \url{https://www.kaggle.com/c/LANL-Earthquake-Prediction}.
+
+\bibitem{kernelallunia}
+Allunia.
+\newblock Shaking {E}arth.
+\newblock 2019.
+\newblock URL: \url{https://www.kaggle.com/allunia/shaking-earth}.
+
+\bibitem{sloweq}
+J.~R.~Leeman et~al.
+\newblock Laboratory observations of slow earthquakes and the spectrum of
+  tectonic fault slip modes. nat. commun. 7:11104 doi: 10.1038/ncomms11104.
+\newblock Technical report.
+\newblock 2016.
+\newblock URL: \url{https://www.nature.com/articles/ncomms11104}.
+
+\bibitem{kernelinit}
+inversion.
+\newblock Basic {F}eature {B}enchmark.
+\newblock 2019.
+\newblock URL: \url{https://www.kaggle.com/inversion/basic-feature-benchmark}.
+
+\bibitem{kernelpreda}
+Gabriel Preda.
+\newblock L{ANL} {E}arthquake {EDA} and {P}rediction.
+\newblock 2019.
+\newblock URL:
+  \url{https://www.kaggle.com/gpreda/lanl-earthquake-eda-and-prediction}.
+
+\bibitem{mleq}
+Bertrand Rouet-Leduc, Claudia Hulbert, Nicholas Lubbers, Kipton Barros,
+  Colin~J. Humphreys, and Paul~A. Johnson.
+\newblock Machine {L}earning {P}redicts {L}aboratory {E}arthquakes.
+\newblock Technical report.
+\newblock 2017.
+\newblock URL: \url{https://doi.org/10.1002/2017GL074677}.
+
+\end{thebibliography}

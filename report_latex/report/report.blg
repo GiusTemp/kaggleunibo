@@ -1,0 +1,23 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: report.aux
+A level-1 auxiliary file: frontespizio.aux
+A level-1 auxiliary file: Abstract.aux
+A level-1 auxiliary file: indice.aux
+A level-1 auxiliary file: capitolo1.aux
+A level-1 auxiliary file: capitolo2.aux
+A level-1 auxiliary file: capitolo3.aux
+The style file: plainurl.bst
+Database file #1: bibl_report.bib
+Warning--entry type for "challenge" isn't style-file defined
+--line 15 of file bibl_report.bib
+Warning--entry type for "kernelpreda" isn't style-file defined
+--line 21 of file bibl_report.bib
+Warning--entry type for "kernelallunia" isn't style-file defined
+--line 28 of file bibl_report.bib
+Warning--entry type for "kernelinit" isn't style-file defined
+--line 35 of file bibl_report.bib
+Warning--to sort, need author or key in challenge
+Warning--empty institution in sloweq
+Warning--empty year in sloweq
+Warning--empty institution in mleq
+Warning--empty year in mleq
+(There were 9 warnings)
