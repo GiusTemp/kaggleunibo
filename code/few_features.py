@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy.stats import kurtosis
 from scipy.stats import skew
-#from from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 
@@ -84,18 +84,18 @@ print(X_train.head())
 # In[6]:
 
 #normalize train data
-#scaler = StandardScaler()
-#scaler.fit(X_train)
-#X_train_scaled = scaler.transform(X_train)
-#X_train_scaled
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = scaler.transform(X_train)
+print(X_train_scaled)
 
 
 # In[6]:
 #apply model
  
 model = LinearRegression()
-model.fit(X_train, y_train.values)
-y_pred = model.predict(X_train)
+model.fit(X_train_scaled, y_train.values.flatten())
+y_pred = model.predict(X_train_scaled)
 
 # In[7]:
 plt.figure(figsize=(6, 6))
@@ -105,11 +105,11 @@ plt.ylim(0, 20)
 plt.xlabel('actual', fontsize=12)
 plt.ylabel('predicted', fontsize=12)
 plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
-plt.show()
+#plt.show()
 
 
 # In[8]:
-score = mean_absolute_error(y_train.values, y_pred)
+score = mean_absolute_error(y_train.values.flatten(), y_pred)
 print(score)
 
 
@@ -152,6 +152,6 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
 
-#X_test_scaled = scaler.transform(X_test)
-submission['time_to_failure'] = model.predict(X_test)
+X_test_scaled = scaler.transform(X_test)
+submission['time_to_failure'] = model.predict(X_test_scaled)
 submission.to_csv('submission.csv')
