@@ -101,7 +101,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn import svm
 from sklearn.svm import NuSVR
-model = NuSVR(kernel='sigmoid')
+model = NuSVR()
    
 model.fit(X_train_scaled, y_train.values.flatten())
 y_pred = model.predict(X_train_scaled)
