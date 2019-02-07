@@ -8,7 +8,9 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 import os
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from sklearn.preprocessing import StandardScaler
+from scipy.stats import kurtosis
+from scipy.stats import skew
+#from from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 
@@ -19,9 +21,7 @@ from sklearn.metrics import mean_absolute_error
 # In[2]:
 
 train = pd.read_csv('../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
-
-#print("Train loaded! ")
-print(train.head())
+print("Train loaded! ")
 
 # In[3]:
 
@@ -31,26 +31,18 @@ print(train.head())
 
 # In[4]:
 
-
 # Create a training file with simple derived features
 
 rows = 150000 
 segments = int( np.floor(train.shape[0]) / rows) 
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
-                       columns=['ave', 'std', 'max', 'min','mad','kurt',
-                           'skew','median','q01','q05','q95','q99',
-				'abs_mean', 'abs_std', 'abs_max', 'abs_min','abs_mad','abs_kurt',
-                           'abs_skew','abs_median','abs_q01','abs_q05','abs_q95','abs_q99'])
-
-
+                       columns=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew', 'median', 'q01', 'q05', 'q95', 'q99',
+								'abs_mean', 'abs_std', 'abs_max', 'abs_min', 'abs_mad', 'abs_kurt', 'abs_skew', 'abs_median', 'abs_q01', 'abs_q05', 'abs_q95', 'abs_q99'])
 
 y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
                        columns=['time_to_failure'])
  
-from scipy.stats import kurtosis
-from scipy.stats import skew
-
 for segment in tqdm(range(segments)):
     seg = train.iloc[segment*rows:segment*rows+rows]
     
@@ -64,26 +56,26 @@ for segment in tqdm(range(segments)):
     X_train.loc[segment, 'std'] = x.std()
     X_train.loc[segment, 'max'] = x.max()
     X_train.loc[segment, 'min'] = x.min()
-    X_train.loc[segment, "mad"] = x.mad()
-    X_train.loc[segment, "kurt"] = kurtosis(x)
-    X_train.loc[segment, "skew"] = skew(x)
-    X_train.loc[segment, "median"] = x.median()
-    X_train.loc[segment, "q01"] = np.quantile(x, 0.01)
-    X_train.loc[segment, "q05"] = np.quantile(x, 0.05)
-    X_train.loc[segment, "q95"] = np.quantile(x, 0.95)
-    X_train.loc[segment, "q99"] = np.quantile(x, 0.99) 
-    X_train.loc[segment, "abs_mean"] = x.abs().mean()
-    X_train.loc[segment, "abs_std"] = x.abs().std()
-    X_train.loc[segment, "abs_max"] = x.abs().max()
-    X_train.loc[segment, "abs_min"] = x.abs().min()
-    X_train.loc[segment, "abs_mad"] = x.abs().mad()
-    X_train.loc[segment, "abs_kurt"] = kurtosis(x.abs())
-    X_train.loc[segment, "abs_skew"] = skew(x.abs())
-    X_train.loc[segment, "abs_median"] = x.abs().median()
-    X_train.loc[segment, "abs_q01"] = np.quantile(x.abs(), 0.01)
-    X_train.loc[segment, "abs_q05"] = np.quantile(x.abs(), 0.05)
-    X_train.loc[segment, "abs_q95"] = np.quantile(x.abs(), 0.95)
-    X_train.loc[segment, "abs_q99"] = np.quantile(x.abs(), 0.99)
+    X_train.loc[segment, 'mad'] = x.mad()
+    X_train.loc[segment, 'kurt'] = kurtosis(x)
+    X_train.loc[segment, 'skew'] = skew(x)
+    X_train.loc[segment, 'median'] = x.median()
+    X_train.loc[segment, 'q01'] = np.quantile(x, 0.01)
+    X_train.loc[segment, 'q05'] = np.quantile(x, 0.05)
+    X_train.loc[segment, 'q95'] = np.quantile(x, 0.95)
+    X_train.loc[segment, 'q99'] = np.quantile(x, 0.99) 
+    X_train.loc[segment, 'abs_mean'] = x.abs().mean()
+    X_train.loc[segment, 'abs_std'] = x.abs().std()
+    X_train.loc[segment, 'abs_max'] = x.abs().max()
+    X_train.loc[segment, 'abs_min'] = x.abs().min()
+    X_train.loc[segment, 'abs_mad'] = x.abs().mad()
+    X_train.loc[segment, 'abs_kurt'] = kurtosis(x.abs())
+    X_train.loc[segment, 'abs_skew'] = skew(x.abs())
+    X_train.loc[segment, 'abs_median'] = x.abs().median()
+    X_train.loc[segment, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_train.loc[segment, 'abs_q05'] = np.quantile(x.abs(), 0.05)
+    X_train.loc[segment, 'abs_q95'] = np.quantile(x.abs(), 0.95)
+    X_train.loc[segment, 'abs_q99'] = np.quantile(x.abs(), 0.99)
 # In[5]:
 
 X_train.to_csv("X_train.csv")
@@ -139,31 +131,27 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'std'] = x.std()
     X_test.loc[seg_id, 'max'] = x.max()
     X_test.loc[seg_id, 'min'] = x.min()
-    X_test.loc[seg_id, "mad"] = x.mad()
-    X_test.loc[seg_id, "kurt"] = kurtosis(x)
-    X_test.loc[seg_id, "skew"] = skew(x)
-    X_test.loc[seg_id, "median"] = x.median()
-    X_test.loc[seg_id, "q01"] = np.quantile(x, 0.01)
-    X_test.loc[seg_id, "q05"] = np.quantile(x, 0.05)
-    X_test.loc[seg_id, "q95"] = np.quantile(x, 0.95)
-    X_test.loc[seg_id, "q99"] = np.quantile(x, 0.99)
-    X_test.loc[seg_id, "abs_mean"] = x.abs().mean()
-    X_test.loc[seg_id, "abs_std"] = x.abs().std()
-    X_test.loc[seg_id, "abs_max"] = x.abs().max()
-    X_test.loc[seg_id, "abs_min"] = x.abs().min()
-    X_test.loc[seg_id, "abs_mad"] = x.abs().mad()
-    X_test.loc[seg_id, "abs_kurt"] = kurtosis(x.abs())
-    X_test.loc[seg_id, "abs_skew"] = skew(x.abs())
-    X_test.loc[seg_id, "abs_median"] = x.abs().median()
-    X_test.loc[seg_id, "abs_q01"] = np.quantile(x.abs(), 0.01)
-    X_test.loc[seg_id, "abs_q05"] = np.quantile(x.abs(), 0.05)
-    X_test.loc[seg_id, "abs_q95"] = np.quantile(x.abs(), 0.95)
-    X_test.loc[seg_id, "abs_q99"] = np.quantile(x.abs(), 0.99)
+    X_test.loc[seg_id, 'mad'] = x.mad()
+    X_test.loc[seg_id, 'kurt'] = kurtosis(x)
+    X_test.loc[seg_id, 'skew'] = skew(x)
+    X_test.loc[seg_id, 'median'] = x.median()
+    X_test.loc[seg_id, 'q01'] = np.quantile(x, 0.01)
+    X_test.loc[seg_id, 'q05'] = np.quantile(x, 0.05)
+    X_test.loc[seg_id, 'q95'] = np.quantile(x, 0.95)
+    X_test.loc[seg_id, 'q99'] = np.quantile(x, 0.99)
+    X_test.loc[seg_id, 'abs_mean'] = x.abs().mean()
+    X_test.loc[seg_id, 'abs_std'] = x.abs().std()
+    X_test.loc[seg_id, 'abs_max'] = x.abs().max()
+    X_test.loc[seg_id, 'abs_min'] = x.abs().min()
+    X_test.loc[seg_id, 'abs_mad'] = x.abs().mad()
+    X_test.loc[seg_id, 'abs_kurt'] = kurtosis(x.abs())
+    X_test.loc[seg_id, 'abs_skew'] = skew(x.abs())
+    X_test.loc[seg_id, 'abs_median'] = x.abs().median()
+    X_test.loc[seg_id, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_test.loc[seg_id, 'abs_q05'] = np.quantile(x.abs(), 0.05)
+    X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
+    X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
 
 #X_test_scaled = scaler.transform(X_test)
 submission['time_to_failure'] = model.predict(X_test)
 submission.to_csv('submission.csv')
-
-
-
-

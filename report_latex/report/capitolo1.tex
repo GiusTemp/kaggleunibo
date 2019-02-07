@@ -45,7 +45,7 @@ In particular, the dataset is made of two subsets:
 On the other hand, each segment from the test set folder is named after its \texttt{seg\textunderscore id} and only has one field, the \texttt{acoustic\textunderscore data}.
 While the training set is a single, continuous, big segment of experimental data, the test set is continuous within a single segment, but the set of files cannot be considered continuous; thus, the predictions can't be assumed to follow the same pattern of the training file.
 
-The goal of the competition is to predict a single \texttt{time\textunderscore to\textunderscore failure} for each segment, corresponding to the time between the last row of the segment and the next laboratory earthquake.
+The goal of the competition is to predict a single \texttt{time\textunderscore to\textunderscore failure} for each segment, corresponding to the time between the last row of the segment and the next laboratory earthquake. The results must be submitted on the Kaggle platform as a \texttt{.csv} file containing the predictions for each test segment, and the score is then obtained through the application of the \textit{Mean Absolute Error} between the real time values and the predictions.
 
 \bigbreak
 
