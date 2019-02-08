@@ -39,7 +39,7 @@ rows = 150000
 segments = int( np.floor(train.shape[0]) / rows) 
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
-    columns=['ave','std', 'pp', 'q01','q05', 'q95','q99'])
+    columns=['ave','std','pp','q01','q05', 'q95','q99'])
 
 y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
                        columns=['time_to_failure'])
@@ -77,16 +77,12 @@ print(X_train_scaled)
 # In[6]:
 #apply model
 
-from sklearn.isotonic import IsotonicRegression
-from sklearn.linear_model import ElasticNet
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn import svm
-from sklearn.svm import NuSVR
+from sklearn.neighbors import KNeighborsRegressor
 
-model = NuSVR()
+model = KNeighborsRegressor(n_neighbors=5)
    
-model.fit(X_train_scaled, y_train.values.flatten())
-y_pred = model.predict(X_train_scaled)
+model.fit(X_train, y_train.values)
+y_pred = model.predict(X_train)
 
 # In[7]:
 plt.figure(figsize=(6, 6))
@@ -128,5 +124,5 @@ for seg_id in X_test.index:
 
 
 X_test_scaled = scaler.transform(X_test)
-submission['time_to_failure'] = model.predict(X_test_scaled)
+submission['time_to_failure'] = model.predict(X_test)
 submission.to_csv('submission.csv')

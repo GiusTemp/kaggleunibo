@@ -1,305 +1,209 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
+# In[0]:
 
 import numpy as np
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import os
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+from scipy.stats import kurtosis
+from scipy.stats import skew
+#from sklearn.preprocessing import StandardScaler
+#from sklearn.linear_model import ElasticNetCV
+from sklearn.metrics import mean_absolute_error
+from sklearn.kernel_ridge import KernelRidge
 
-import pandas as pd
+# In[1]:
 
-import altair as alt
-alt.renderers.enable("kaggle")
-from IPython.display import display  
-from tqdm import tqdm_notebook as tqdm
-
-# simple models and preprocessing from scikit learn
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-
-# some constants:
-num_lines = 629_145_480  # total number of lines in the CSV file
-num_lines_per_segment = 150_000  # number of lines in each test segment
-
+#os.listdir(".")
 
 # In[2]:
 
-
-def create_features_for_segment(idx, raw_data):
-    """ create features for a segment of raw data 
-    
-    Args:
-        idx: index to save the features under
-        raw_data: the raw data segment to calculate the features for
-        
-    Returns:
-        features: a pandas DataFrame with 180 feature columns and a single
-            index specified by `idx`.
-    
-    """
-    data = pd.DataFrame(index=[idx])
-    data.loc[idx, "data"] = raw_data.iloc[-1].item()
-    data.loc[idx, "mean"] = raw_data.mean().item()
-    data.loc[idx, "std"] = raw_data.std().item()
-    data.loc[idx, "max"] = raw_data.max().item()
-    data.loc[idx, "min"] = raw_data.min().item()
-    data.loc[idx, "mad"] = raw_data.mad().item()
-    data.loc[idx, "kurt"] = raw_data.kurtosis().item()
-    data.loc[idx, "skew"] = raw_data.skew().item()
-    data.loc[idx, "median"] = raw_data.median().item()
-    data.loc[idx, "q01"] = np.quantile(raw_data, 0.01)
-    data.loc[idx, "q05"] = np.quantile(raw_data, 0.05)
-    data.loc[idx, "q95"] = np.quantile(raw_data, 0.95)
-    data.loc[idx, "q99"] = np.quantile(raw_data, 0.99)
-    data.loc[idx, "iqr"] = np.subtract(*np.percentile(raw_data, [75, 25]))
-    data.loc[idx, "abs_mean"] = raw_data.abs().mean().item()
-    data.loc[idx, "abs_std"] = raw_data.abs().std().item()
-    data.loc[idx, "abs_max"] = raw_data.abs().max().item()
-    data.loc[idx, "abs_min"] = raw_data.abs().min().item()
-    data.loc[idx, "abs_mad"] = raw_data.abs().mad().item()
-    data.loc[idx, "abs_kurt"] = raw_data.abs().kurtosis().item()
-    data.loc[idx, "abs_skew"] = raw_data.abs().skew().item()
-    data.loc[idx, "abs_median"] = raw_data.abs().median().item()
-    data.loc[idx, "abs_q01"] = np.quantile(raw_data.abs(), 0.01)
-    data.loc[idx, "abs_q05"] = np.quantile(raw_data.abs(), 0.05)
-    data.loc[idx, "abs_q95"] = np.quantile(raw_data.abs(), 0.95)
-    data.loc[idx, "abs_q99"] = np.quantile(raw_data.abs(), 0.99)
-    data.loc[idx, "abs_iqr"] = np.subtract(*np.percentile(raw_data.abs(), [75, 25]))
-
-    for window in [10, 100, 1000]:
-
-        data_roll_mean = raw_data.rolling(window).mean().dropna()
-        data.loc[idx, f"mean_mean_{window}"] = data_roll_mean.mean().item()
-        data.loc[idx, f"std_mean_{window}"] = data_roll_mean.std().item()
-        data.loc[idx, f"max_mean_{window}"] = data_roll_mean.max().item()
-        data.loc[idx, f"min_mean_{window}"] = data_roll_mean.min().item()
-        data.loc[idx, f"mad_mean_{window}"] = data_roll_mean.mad().item()
-        data.loc[idx, f"kurt_mean_{window}"] = data_roll_mean.kurtosis().item()
-        data.loc[idx, f"skew_mean_{window}"] = data_roll_mean.skew().item()
-        data.loc[idx, f"median_mean_{window}"] = data_roll_mean.median().item()
-        data.loc[idx, f"q01_mean_{window}"] = np.quantile(data_roll_mean, 0.01)
-        data.loc[idx, f"q05_mean_{window}"] = np.quantile(data_roll_mean, 0.05)
-        data.loc[idx, f"q95_mean_{window}"] = np.quantile(data_roll_mean, 0.95)
-        data.loc[idx, f"q99_mean_{window}"] = np.quantile(data_roll_mean, 0.99)
-        data.loc[idx, f"iqr_mean_{window}"] = np.subtract(
-            *np.percentile(data_roll_mean, [75, 25])
-        )
-        data.loc[idx, f"abs_mean_mean_{window}"] = data_roll_mean.abs().mean().item()
-        data.loc[idx, f"abs_std_mean_{window}"] = data_roll_mean.abs().std().item()
-        data.loc[idx, f"abs_max_mean_{window}"] = data_roll_mean.abs().max().item()
-        data.loc[idx, f"abs_min_mean_{window}"] = data_roll_mean.abs().min().item()
-        data.loc[idx, f"abs_mad_mean_{window}"] = data_roll_mean.abs().mad().item()
-        data.loc[idx, f"abs_kurt_mean_{window}"] = (
-            data_roll_mean.abs().kurtosis().item()
-        )
-        data.loc[idx, f"abs_skew_mean_{window}"] = data_roll_mean.abs().skew().item()
-        data.loc[idx, f"abs_median_mean_{window}"] = (
-            data_roll_mean.abs().median().item()
-        )
-        data.loc[idx, f"abs_q01_mean_{window}"] = np.quantile(
-            data_roll_mean.abs(), 0.01
-        )
-        data.loc[idx, f"abs_q05_mean_{window}"] = np.quantile(
-            data_roll_mean.abs(), 0.05
-        )
-        data.loc[idx, f"abs_q95_mean_{window}"] = np.quantile(
-            data_roll_mean.abs(), 0.95
-        )
-        data.loc[idx, f"abs_q99_mean_{window}"] = np.quantile(
-            data_roll_mean.abs(), 0.99
-        )
-        data.loc[idx, f"abs_iqr_mean_{window}"] = np.subtract(
-            *np.percentile(data_roll_mean.abs(), [75, 25])
-        )
-
-        data_roll_std = raw_data.rolling(window).std().dropna()
-        data.loc[idx, f"mean_std_{window}"] = data_roll_std.mean().item()
-        data.loc[idx, f"std_std_{window}"] = data_roll_std.std().item()
-        data.loc[idx, f"max_std_{window}"] = data_roll_std.max().item()
-        data.loc[idx, f"min_std_{window}"] = data_roll_std.min().item()
-        data.loc[idx, f"mad_std_{window}"] = data_roll_std.mad().item()
-        data.loc[idx, f"kurt_std_{window}"] = data_roll_std.kurtosis().item()
-        data.loc[idx, f"skew_std_{window}"] = data_roll_std.skew().item()
-        data.loc[idx, f"median_std_{window}"] = data_roll_std.median().item()
-        data.loc[idx, f"q01_std_{window}"] = np.quantile(data_roll_mean, 0.01)
-        data.loc[idx, f"q05_std_{window}"] = np.quantile(data_roll_mean, 0.05)
-        data.loc[idx, f"q95_std_{window}"] = np.quantile(data_roll_mean, 0.95)
-        data.loc[idx, f"q99_std_{window}"] = np.quantile(data_roll_mean, 0.99)
-        data.loc[idx, f"iqr_std_{window}"] = np.subtract(
-            *np.percentile(data_roll_std, [75, 25])
-        )
-        data.loc[idx, f"abs_mean_std_{window}"] = data_roll_std.abs().mean().item()
-        data.loc[idx, f"abs_std_std_{window}"] = data_roll_std.abs().std().item()
-        data.loc[idx, f"abs_max_std_{window}"] = data_roll_std.abs().max().item()
-        data.loc[idx, f"abs_min_std_{window}"] = data_roll_std.abs().min().item()
-        data.loc[idx, f"abs_mad_std_{window}"] = data_roll_std.abs().mad().item()
-        data.loc[idx, f"abs_kurt_std_{window}"] = data_roll_std.abs().kurtosis().item()
-        data.loc[idx, f"abs_skew_std_{window}"] = data_roll_std.abs().skew().item()
-        data.loc[idx, f"abs_median_std_{window}"] = data_roll_std.abs().median().item()
-        data.loc[idx, f"abs_q01_std_{window}"] = np.quantile(data_roll_std.abs(), 0.01)
-        data.loc[idx, f"abs_q05_std_{window}"] = np.quantile(data_roll_std.abs(), 0.05)
-        data.loc[idx, f"abs_q95_std_{window}"] = np.quantile(data_roll_std.abs(), 0.95)
-        data.loc[idx, f"abs_q99_std_{window}"] = np.quantile(data_roll_std.abs(), 0.99)
-        data.loc[idx, f"iqr_std_{window}"] = np.subtract(
-            *np.percentile(data_roll_std, [75, 25])
-        )
-
-    return data
-
-
-# In[2]:
-
-def load_raw_train_data():
-    """ load raw train data as a dataframe """
-    train_data = pd.read_csv(
-        filepath_or_buffer="C:/Users/PC-Casa/input/mytrain.csv",
-        dtype={"acoustic_data": np.int16, "time_to_failure": np.float32},
-    )
-    return train_data
-
+train = pd.read_csv('../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
+print("Train loaded! ")
 
 # In[3]:
 
-def load_train_features_and_target():
-    """ load raw train data and transform to two (feature and target) dataframes """
-    print("loading raw train data... [this takes about 2 min]")
-    
-	raw_data = load_raw_train_data()
-    ram_mb = raw_data.memory_usage(deep=True).sum().item() / 1024 ** 2
-   
-    print(f"raw train data loaded. RAM Usage: {ram_mb:.2f} MB")
-    
-	idxs = np.arange(num_lines_per_segment, num_lines, num_lines_per_segment // 2)
-    target_values = np.zeros((idxs.shape[0], 1))
-    feature_values = np.zeros((idxs.shape[0], 180))
-    
-	print("transforming raw data into feature dataframe. This takes about 30 min...")
-    
-	for i, idx in enumerate(tqdm(idxs)):
-        segment = raw_data.iloc[idx - num_lines_per_segment + 1 : idx + 1]
-        target_values[i] = segment.time_to_failure.values[-1:]
-        segment = segment[["acoustic_data"]]
-        feature_row = create_features_for_segment(idx, segment)
-        feature_values[i, :] = feature_row.values
-    features = pd.DataFrame(
-        index=idxs, data=feature_values, columns=feature_row.columns
-    )
-    
-	print("train feature dataframe created")
-    target = pd.DataFrame(index=idxs, data=target_values, columns=["time_to_failure"])
-    print("train target dataframe created")
-    
-	return features, target
-
+# pandas doesn't show us all the decimals
+pd.options.display.precision = 15
+print(train.head())
 
 # In[4]:
 
-
-def load_test_features():
-    """ load raw test data and transform to a feature dataframe """
-    print("loading train segment ids...")
-    seg_ids = pd.read_csv("../input/sample_submission.csv", index_col="seg_id").index
-    feature_values = np.zeros((seg_ids.shape[0], 180))
-    print("converting test segments into feature dataframes. "
-          "This takes a about 30 min...")
-    for i, seg_id in enumerate(tqdm(seg_ids)):
-        segment = pd.read_csv(
-            filepath_or_buffer=f"../input/test/{seg_id}.csv",
-            dtype={"acoustic_data": np.int16, "time_to_failure": np.float32},
-        )
-        feature_row = create_features_for_segment(seg_id, segment)
-        feature_values[i, :] = feature_row
-    features = pd.DataFrame(
-        index=seg_ids, data=feature_values, columns=feature_row.columns
-    )
-    print("test feature dataframe created")
-    return features
+# Create a training file with simple derived features
 
 
+rows = 150000 
+segments = int( np.floor(train.shape[0]) / rows) 
+columns_X=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew',
+        'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
+'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
+'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99',
+'mean_mean_{window}','std_mean_{window}','max_mean_{window}',
+ 'min_mean_{window}','mad_mean_{window}','kurt_mean_{window}',
+'skew_mean_{window}','median_mean_{window}','q01_mean_{window}','q05_mean_{window}','q95_mean_{window}',
+'q99_mean_{window}']
+
+X_train = pd.DataFrame(index=range(segments), dtype=np.float64, columns=columns_X)
+
+y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
+                       columns=['time_to_failure'])
+ 
+for segment in tqdm(range(segments)):
+    seg = train.iloc[segment*rows:segment*rows+rows]
+    
+
+    x = seg['acoustic_data'] 
+    y = seg['time_to_failure'].values[-1]
+    
+    y_train.loc[segment, 'time_to_failure'] = y
+    X_train.loc[segment, 'ave'] = x.mean()
+    X_train.loc[segment, 'std'] = x.std()
+    X_train.loc[segment, 'max'] = x.max()
+    X_train.loc[segment, 'min'] = x.min()
+    X_train.loc[segment, 'mad'] = x.mad()
+    X_train.loc[segment, 'kurt'] = kurtosis(x)
+    X_train.loc[segment, 'skew'] = skew(x)
+    X_train.loc[segment, 'median'] = x.median()
+    X_train.loc[segment, 'q01'] = np.quantile(x, 0.01)
+    X_train.loc[segment, 'q05'] = np.quantile(x, 0.05)
+    X_train.loc[segment, 'q95'] = np.quantile(x, 0.95)
+    X_train.loc[segment, 'q99'] = np.quantile(x, 0.99) 
+    X_train.loc[segment, 'abs_mean'] = x.abs().mean()
+    X_train.loc[segment, 'abs_std'] = x.abs().std()
+    X_train.loc[segment, 'abs_max'] = x.abs().max()
+    X_train.loc[segment, 'abs_min'] = x.abs().min()
+    X_train.loc[segment, 'abs_mad'] = x.abs().mad()
+    X_train.loc[segment, 'abs_kurt'] = kurtosis(x.abs())
+    X_train.loc[segment, 'abs_skew'] = skew(x.abs())
+    X_train.loc[segment, 'abs_median'] = x.abs().median()
+    X_train.loc[segment, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_train.loc[segment, 'abs_q05'] = np.quantile(x.abs(), 0.05)
+    X_train.loc[segment, 'abs_q95'] = np.quantile(x.abs(), 0.95)
+    X_train.loc[segment, 'abs_q99'] = np.quantile(x.abs(), 0.99)
+    
+    for window in [10, 100, 1000]:
+        data_roll_mean = x.rolling(window).mean().dropna()
+        X_train.loc[segment, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_train.loc[segment, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_train.loc[segment, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_train.loc[segment, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_train.loc[segment, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_train.loc[segment, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_train.loc[segment, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_train.loc[segment, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_train.loc[segment, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_train.loc[segment, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_train.loc[segment, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_train.loc[segment, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
+        
 # In[5]:
 
-# load data
-features, target = load_train_features_and_target()
+X_train.to_csv("X_train.csv")
+print(X_train.head())
 
-# scale features inplace
-feature_scaler = StandardScaler(copy=False)
-feature_scaler.fit_transform(features)
+# In[6]:
 
-print("\n\n\ndata:")
-print(features.shape)
-display(features.head())
-
-print("\n\n\ntarget:")
-print(target.shape)
-display(target.head())
+#normalize train data
+#scaler = StandardScaler()
+#scaler.fit(X_train)
+#X_train_scaled = scaler.transform(X_train)
+#print(X_train_scaled)
 
 
 # In[6]:
-# apply model
+#apply model
 
-model = LinearRegression()
-model.fit(features, target)
+#from sklearn.isotonic import IsotonicRegression
+#from sklearn.linear_model import ElasticNet
+#from sklearn.gaussian_process import GaussianProcessRegressor
+#from sklearn import svm
+#from sklearn.svm import NuSVR
 
+from sklearn.feature_selection import SelectKBest, mutual_info_regression
+X_new = SelectKBest(mutual_info_regression, k=10)
+X_new.fit(X_train.values, y_train.values)
+print(columns_X[X_new.get_support()])
+
+'''model = NuSVR()
+   
+model.fit(X_train_scaled, y_train.values.flatten())
+y_pred = model.predict(X_train_scaled)
 
 # In[7]:
-# Evaluation
-
-def make_prediction(features, column_name="prediction"):
-    """ custom prediction function that returns a dataframe in stead of a numpy array"""
-    prediction = pd.DataFrame(
-        index=features.index, data=model.predict(features.values), columns=[column_name]
-    )
-    return prediction
+plt.figure(figsize=(6, 6))
+plt.scatter(y_train.values, y_pred)
+plt.xlim(0, 20)
+plt.ylim(0, 20)
+plt.xlabel('actual', fontsize=12)
+plt.ylabel('predicted', fontsize=12)
+plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
+plt.show()
 
 
 # In[8]:
-
-prediction = make_prediction(features)
-
-
-# This prediction can then be used to calculate the train error:
-np.mean(np.abs(prediction.values - target.values))
+score = mean_absolute_error(y_train.values.flatten(), y_pred)
+print(score)
 
 
-### Visualize
-
-# Altair stores *all* the data it recieves internally in the notebook as json. It is therefore usefull to define a slightly smaller dataframe 
-# with just the features we need for visualization to avoid bloating the size of our notebook:
-chart_data = pd.concat([prediction, target], 1).iloc[::10].reset_index()
+# In[9]:
+print("reading all segments")
+submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id')
 
 
-# Using this chart data, we see a clear correlation between the predicted values and target values, which is of course good:
-alt.Chart(chart_data).mark_point().encode(x="prediction", y="time_to_failure")
+# In[10]:
 
+X_test = pd.DataFrame(columns=X_train.columns, dtype=np.float64, index=submission.index)
 
-# We also see that our simple linear regression model does a fair job estimating the `time_to_failure`
-
-# In[ ]:
-
-
-chart1 = alt.Chart(chart_data).mark_line().encode(
-    x = "index",
-    y = "time_to_failure",
+for seg_id in X_test.index:
+    seg = pd.read_csv('../../input/test/' + seg_id + '.csv')
     
-)
-chart2 = alt.Chart(chart_data).mark_line().encode(
-    x = "index",
-    y = "prediction",
-    color=alt.value("red")
-)
-chart1 + chart2
+    x = seg['acoustic_data'] 
+    
+    X_test.loc[seg_id, 'ave'] = x.mean()
+    X_test.loc[seg_id, 'std'] = x.std()
+    X_test.loc[seg_id, 'max'] = x.max()
+    X_test.loc[seg_id, 'min'] = x.min()
+    X_test.loc[seg_id, 'mad'] = x.mad()
+    X_test.loc[seg_id, 'kurt'] = kurtosis(x)
+    X_test.loc[seg_id, 'skew'] = skew(x)
+    X_test.loc[seg_id, 'median'] = x.median()
+    X_test.loc[seg_id, 'q01'] = np.quantile(x, 0.01)
+    X_test.loc[seg_id, 'q05'] = np.quantile(x, 0.05)
+    X_test.loc[seg_id, 'q95'] = np.quantile(x, 0.95)
+    X_test.loc[seg_id, 'q99'] = np.quantile(x, 0.99)
+    X_test.loc[seg_id, 'abs_mean'] = x.abs().mean()
+    X_test.loc[seg_id, 'abs_std'] = x.abs().std()
+    X_test.loc[seg_id, 'abs_max'] = x.abs().max()
+    X_test.loc[seg_id, 'abs_min'] = x.abs().min()
+    X_test.loc[seg_id, 'abs_mad'] = x.abs().mad()
+    X_test.loc[seg_id, 'abs_kurt'] = kurtosis(x.abs())
+    X_test.loc[seg_id, 'abs_skew'] = skew(x.abs())
+    X_test.loc[seg_id, 'abs_median'] = x.abs().median()
+    X_test.loc[seg_id, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_test.loc[seg_id, 'abs_q05'] = np.quantile(x.abs(), 0.05)
+    X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
+    X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
+    
+    
+    for window in [10, 100, 1000]:
+        data_roll_mean = x.rolling(window).mean().dropna()
+        X_test.loc[seg_id, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_test.loc[seg_id, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_test.loc[seg_id, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_test.loc[seg_id, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_test.loc[seg_id, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_test.loc[seg_id, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_test.loc[seg_id, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_test.loc[seg_id, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_test.loc[seg_id, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_test.loc[seg_id, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_test.loc[seg_id, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_test.loc[seg_id, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
 
 
-
-# ## Submission
-
-
-
-test_features = load_test_features()
-feature_scaler.transform(test_features)
-prediction = make_prediction(test_features, column_name="time_to_failure")
-prediction.time_to_failure[prediction.time_to_failure < 0] = 0
-prediction.index.name = "seg_id"
-prediction.to_csv("submission.csv")
-prediction.head()
-
+X_test_scaled = scaler.transform(X_test)
+submission['time_to_failure'] = model.predict(X_test_scaled)
+submission.to_csv('submission.csv')'''
