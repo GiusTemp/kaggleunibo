@@ -42,7 +42,11 @@ X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
     columns=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew',
         'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
 'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
-'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99'])
+'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99',
+'mean_mean_{window}','std_mean_{window}','max_mean_{window}',
+ 'min_mean_{window}','mad_mean_{window}','kurt_mean_{window}',
+'skew_mean_{window}','median_mean_{window}','q01_mean_{window}','q05_mean_{window}','q95_mean_{window}',
+'q99_mean_{window}'])
 
 y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
                        columns=['time_to_failure'])
@@ -82,18 +86,18 @@ for segment in tqdm(range(segments)):
     
     for window in [10, 100, 1000]:
         data_roll_mean = x.rolling(window).mean().dropna()
-        X_train.loc[segment, f"mean_mean_{window}"] = data_roll_mean.mean().item()
-        X_train.loc[segment, f"std_mean_{window}"] = data_roll_mean.std().item()
-        X_train.loc[segment, f"max_mean_{window}"] = data_roll_mean.max().item()
-        X_train.loc[segment, f"min_mean_{window}"] = data_roll_mean.min().item()
-        X_train.loc[segment, f"mad_mean_{window}"] = data_roll_mean.mad().item()
-        X_train.loc[segment, f"kurt_mean_{window}"] = data_roll_mean.kurtosis().item()
-        X_train.loc[segment, f"skew_mean_{window}"] = data_roll_mean.skew().item()
-        X_train.loc[segment, f"median_mean_{window}"] = data_roll_mean.median().item()
-        X_train.loc[segment, f"q01_mean_{window}"] = np.quantile(data_roll_mean, 0.01)
-        X_train.loc[segment, f"q05_mean_{window}"] = np.quantile(data_roll_mean, 0.05)
-        X_train.loc[segment, f"q95_mean_{window}"] = np.quantile(data_roll_mean, 0.95)
-        X_train.loc[segment, f"q99_mean_{window}"] = np.quantile(data_roll_mean, 0.99)
+        X_train.loc[segment, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_train.loc[segment, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_train.loc[segment, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_train.loc[segment, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_train.loc[segment, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_train.loc[segment, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_train.loc[segment, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_train.loc[segment, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_train.loc[segment, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_train.loc[segment, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_train.loc[segment, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_train.loc[segment, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
         
 # In[5]:
 
@@ -178,20 +182,22 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     
+    
     for window in [10, 100, 1000]:
         data_roll_mean = x.rolling(window).mean().dropna()
-        X_test.loc[seg_id, f"mean_mean_{window}"] = data_roll_mean.mean().item()
-        X_test.loc[seg_id, f"std_mean_{window}"] = data_roll_mean.std().item()
-        X_test.loc[seg_id, f"max_mean_{window}"] = data_roll_mean.max().item()
-        X_test.loc[seg_id, f"min_mean_{window}"] = data_roll_mean.min().item()
-        X_test.loc[seg_id, f"mad_mean_{window}"] = data_roll_mean.mad().item()
-        X_test.loc[seg_id, f"kurt_mean_{window}"] = data_roll_mean.kurtosis().item()
-        X_test.loc[seg_id, f"skew_mean_{window}"] = data_roll_mean.skew().item()
-        X_test.loc[seg_id, f"median_mean_{window}"] = data_roll_mean.median().item()
-        X_test.loc[seg_id, f"q01_mean_{window}"] = np.quantile(data_roll_mean, 0.01)
-        X_test.loc[seg_id, f"q05_mean_{window}"] = np.quantile(data_roll_mean, 0.05)
-        X_test.loc[seg_id, f"q95_mean_{window}"] = np.quantile(data_roll_mean, 0.95)
-        X_test.loc[seg_id, f"q99_mean_{window}"] = np.quantile(data_roll_mean, 0.99)
+        X_test.loc[seg_id, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_test.loc[seg_id, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_test.loc[seg_id, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_test.loc[seg_id, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_test.loc[seg_id, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_test.loc[seg_id, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_test.loc[seg_id, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_test.loc[seg_id, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_test.loc[seg_id, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_test.loc[seg_id, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_test.loc[seg_id, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_test.loc[seg_id, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
+
 
 X_test_scaled = scaler.transform(X_test)
 submission['time_to_failure'] = model.predict(X_test_scaled)
