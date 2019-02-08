@@ -91,7 +91,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 
-model = RandomForestRegressor(n_estimators=1000)
+model = RandomForestRegressor(n_estimators=10000)
 
 model.fit(X_train, y_train.values.flatten())
 y_pred = model.predict(X_train)
