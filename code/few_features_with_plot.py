@@ -88,10 +88,10 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neighbors import RadiusNeighborsRegressor
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import ExtraTreesRegressor
 
 
-model = RandomForestRegressor(n_estimators=10000)
+model = ExtraTreesRegressor(n_estimators=1000)
 
 model.fit(X_train, y_train.values.flatten())
 y_pred = model.predict(X_train)

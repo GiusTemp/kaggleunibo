@@ -112,9 +112,9 @@ print(X_train.head())
 # In[6]:
 #apply model
 
-from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import RandomForestRegressor
 
-model = ExtraTreesRegressor(n_estimators=1000)
+model = RandomForestRegressor(n_estimators=10000)
 model.fit(X_train, y_train.values.flatten())
 
 y_pred = model.predict(X_train)
