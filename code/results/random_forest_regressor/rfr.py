@@ -39,7 +39,7 @@ rows = 150000
 segments = int( np.floor(train.shape[0]) / rows) 
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
-    columns=['ave','std','pp','q01','q05', 'q95','q99'])
+    columns=['ave','std','max','min','q01','q05', 'q95','q99'])
 
 y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
                        columns=['time_to_failure'])
@@ -54,7 +54,8 @@ for segment in tqdm(range(segments)):
     y_train.loc[segment, 'time_to_failure'] = y
     X_train.loc[segment, 'ave'] = x.mean()
     X_train.loc[segment, 'std'] = x.std()
-    X_train.loc[segment, 'pp'] = x.max()+x.abs().min()
+    X_train.loc[segment, 'max'] = x.max()
+    X_train.loc[segment, 'min'] = x.min()
     X_train.loc[segment, 'q01'] = np.quantile(x, 0.01)
     X_train.loc[segment, 'q05'] = np.quantile(x, 0.05)
     X_train.loc[segment, 'q95'] = np.quantile(x, 0.95)
@@ -90,20 +91,30 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
 
 
-model = RandomForestRegressor(n_estimators=8000)
+model = RandomForestRegressor(n_estimators=10000)
 
 model.fit(X_train, y_train.values.flatten())
 y_pred = model.predict(X_train)
 
+plt.figure(figsize=(16, 8))
+plt.plot(y_train, color='b', label='y_train')
+plt.plot(y_pred, color='gold', label='rfe')
+#plt.plot(oof_xgb, color='teal', label='xgb')
+#plt.plot(oof_svr, color='red', label='svr')
+#plt.plot((oof_lgb + oof_xgb + oof_svr) / 3, color='gold', label='blend')
+plt.legend();
+plt.title('Predictions vs actual');
+plt.show();
+
 # In[7]:
-plt.figure(figsize=(6, 6))
-plt.scatter(y_train.values, y_pred)
-plt.xlim(0, 20)
-plt.ylim(0, 20)
-plt.xlabel('actual', fontsize=12)
-plt.ylabel('predicted', fontsize=12)
-plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
-plt.show()
+#plt.figure(figsize=(6, 6))
+#plt.scatter(y_train.values, y_pred)
+#plt.xlim(0, 20)
+#plt.ylim(0, 20)
+#plt.xlabel('actual', fontsize=12)
+#plt.ylabel('predicted', fontsize=12)
+#plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
+#plt.show()
 
 
 # In[8]:
@@ -127,7 +138,8 @@ for seg_id in X_test.index:
     
     X_test.loc[seg_id, 'ave'] = x.mean()
     X_test.loc[seg_id, 'std'] = x.std()
-    X_test.loc[seg_id, 'pp'] = x.max()+x.abs().min()
+    X_test.loc[seg_id, 'max'] = x.max()
+    X_test.loc[seg_id, 'min'] = x.min()
     X_test.loc[seg_id, 'q01'] = np.quantile(x, 0.01)
     X_test.loc[seg_id, 'q05'] = np.quantile(x, 0.05)
     X_test.loc[seg_id, 'q95'] = np.quantile(x, 0.95)

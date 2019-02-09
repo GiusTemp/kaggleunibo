@@ -99,9 +99,6 @@ y_pred = model.predict(X_train)
 plt.figure(figsize=(16, 8))
 plt.plot(y_train, color='b', label='y_train')
 plt.plot(y_pred, color='gold', label='rfe')
-#plt.plot(oof_xgb, color='teal', label='xgb')
-#plt.plot(oof_svr, color='red', label='svr')
-#plt.plot((oof_lgb + oof_xgb + oof_svr) / 3, color='gold', label='blend')
 plt.legend();
 plt.title('Predictions vs actual');
 plt.show();
