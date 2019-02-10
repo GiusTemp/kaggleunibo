@@ -1,15 +1,11 @@
-\chapter{More advanced models comparison}
+\chapter{More advanced models comparison and issues}
 \label{capitolo3}
 \thispagestyle{empty}
 
 \noindent Starting from the basic model presented in the previous section, for the purpose of this project activity we theorized and tested various approaches to solving the problem.
 
-Lasso
-Elastic net
-Gaussian Probability Regression
-Isotonic Regression
-
 \section[First model]{First model: adding more features with Linear Regression}
+\label{3.1}
 In order to make a step forward in the development of the regression model, our first attempt was to simply check out the performances obtained by a simple model with a few more features than the basic ones. In the attempt to study the impact of different features on the results, our choice for the model was the simple \texttt{Linear Regression} (implemented in \texttt{scikit-learn}), applied on a set of 12 features.
 
 \begin{lstlisting}[firstnumber=35]
@@ -80,10 +76,101 @@ X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
 
 The results obtained in terms of score and predictions using this set of 24 values entailed another slight improvement, giving a value of 2,097 for the mean absolute error (our score), and fewer negative predictions in \texttt{submission.csv}.
 
-After submitting our results to Kaggle's platform, the score of our kernel calculated by the system was 1,660.
+After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,660}. Other attempts to improve this solution were unsatisfactory.
 
-\section[Second model]{Second model}
+%TODO image, plot
+
+%Linear Regression + 5 features (mean, std, pp, q05, q95) + 5*3 rolling windows features: 2,1076697 (pp = peak-to-peak value)
+%Linear Regression + 24 features + 12*3 rolling windows features: 2,111956
+
+\section[Second model]{Second model: Support Vector Regression on more features}
+%Standard Scaler doesn't change the score
+%Lasso same param.: score is worse, increment alpha/num iterations? NO
+%Elastic Net same param, list of cv param : still score is worse; attempt 2, alpha set from None to 1, iterations from 1000 to 10000, tolerance from 0.0001 to 0.001 -> (1) errors, ravel() to flatten y_train; (2) array of dimension 0? deleted all the parameters to ElasticNetCV; (3) gave up; (4) on just one feature (mean) it works (3,048) NO
+%Kernel Ridge alpha 1.0: still bad (2.25) -> tried to reduce the set of features (deleting: kurt, skew, q01, q99 and their abs versions) to improve degrees of freedom, got worse (2,29) NO
+%Isotonic: found out it only works in 1d; tried to work only on the mean, just out of curiosity -> 3,04 (implementations of multiisotonic regression have been researched upon and studied but rely on the concepts of ordering and distances, which don't adapt well to our case of study) NO
+After applying linear regression to an expanded set of features, the following choice was for us to merge the intuition of using more than the basic features while relying on the Support Vector Regression as for the na{\"i}ve solution. The same 24 features described in \ref{3.1} were used, while our exploration in this type of model was mainly focused on the choice of the kernel function (chosen through a parameter defined in the implementation of \texttt{NuSVR} inside \texttt{scikit-learn}). It must also be remembered that, as stated in the documentation, this model needs data to be previously scaled (otherwise performances decrease considerably).
+
+The choice of the kernel function in this case is crucial: a \textit{kernel function} makes it possible to transform data from a \textit{n}-dimensional space (in our case, defined by the set of computed features) into another space with reduced dimensions, in order to find a more clear dividing margin between classes ("\textit{kernel trick}"). There are of course different choices for the kernel function: radial basis function, linear, polynomial, just to name some of them.
+
+Results of changing the \texttt{kernel} parameter were the following, in terms of score on the training set:
+\begin{itemize}
+	\item \texttt{rbf} or \textit{radial basis function}, default: 2,1038;
+	\item \texttt{linear}: 2,1638 (also, quite a few negative results for the submission file);
+	\item \texttt{poly} or \textit{polynomial}: 2,5109861 (even more negative results).
+%	\item \texttt{sigmoid}:15.932038 (wtf)
+\end{itemize}
+
+%TODO image, plot
+
+After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,609}.
+
+%\section[Third model]{Third model}
+%?
+%TODO ?
+
+\section[Overfitting]{The problem of overfitting: Gaussian Processes and Random Forests}
+\textit{Gaussian Processes} are a versatile supervised learning method that aims at interpolating the observations and predicting results with some confidence intervals. Similarly to SVR, a kernel function must be specified.
+
+Introducing the regression model based on GPs on our dataset, the results obtained were surprising to say the least: the precision score calculated on the training set was in the order of magnitude of e-10 (basically, the error didn't exist).
+
+\begin{lstlisting}[firstnumber=14]
+from sklearn.gaussian_process import GaussianProcessRegressor
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=101]
+model = GaussianProcessRegressor()
+\end{lstlisting}
+
+The graph in \ref{} shows that [...]
+
+%TODO image, plot
+
+However, when submitting our results to Kaggle's platform tempted by the above described performances, the score of this kernel was \textbf{2,792}, showing that the built model was indeed overfitted to the training data and performed very badly on the test data.
+
+%k-Nearest Neighbor (ave, std, pp, q01, q05, q95, q99): k=1000 -> 2,71; k=100 -> 2,44; k=20 -> 2,16; k=5 -> 1,94 (submitted: 2,024, overfitting).
+%radius-Nearest Neighbor (ave, std, pp, q01, q05, q95, q99): r=5.0 -> 2,17083; r=1.5 -> 1,58 (radius too short, some values don't have neighbors within the boundaries, e.g. our "good" outliers, thus don't have predictions); r=3.5 -> 2,1094 ?
+
+%Gradient Boosting Regression (alpha 0.95, n_estimators 230): >4, dumped NO
+
+\bigbreak
+
+Almost the same conclusion can be drawn for the \textit{Random Forest Regressor} (and its even more random evolution, \textit{Estremely Randomized Trees Regressor}). These are ensemble methods based on decision trees, whose purpose is to combine predictions of several estimators, doing so by building them independently, then averaging the predictions and obtaining a single base estimator with reduced variance and improved robustness.
+
+The mechanism followed by Random Forests is to build a tree by splitting nodes according to the best split among a random subset of features; this randomness gives the model a decrease in variance with respect to a single non-random tree, that instead chooses the split out of all features. In addition, in Extremely Randomized Trees randomness is used also to select the thresholds that generate the splits.
+
+Implementation of \texttt{RandomForestRegressor} available in \texttt{scikit-learn} takes several parameters as input, among which \texttt{n\textunderscore estimators}, that enables to specify the number of trees in the forest (the larger, the better, but the more intense will be the computation), and \texttt{criterion}, the function measuring the quality of a split (the default is \texttt{MSE}, which fits well to our situation).
+
+\begin{lstlisting}[firstnumber=14]
+from sklearn.ensemble import RandomForestRegressor
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=115]
+model = RandomForestRegressor(n_estimators=10000)
+model.fit(X_train, y_train.values.flatten())
+\end{lstlisting}
+
+%TODO image, plot
+
+Results obtained by computing the score on the available data were very encouraging: only 0,8146 for the training set while using 1000 estimators, and down to 0,77
+%TODO recompute 0,77
+with 10000. After submitting our results to Kaggle's platform, though, the score of this kernel (the best case obtained) calculated by the system was \textbf{1,687}. Even if much better than GPs' results on test data, the score does not reflect the improvement obtained on the training set, showing also in this case that these more advanced models can be very precise in the building phase, but are prone to overfitting. A further development of this solution could perhaps be obtained through a better, more in-depth knowledge of the setting parameters, which was beyond the purpose of this exploring project activity.
+%Random Forest Regressor (n_estimators 200): 0,816861, submitted: 1,742; n_estimators 250 -> 0,81821; n_estimators 1000 -> 05; n_estimators 100000 ? + other results
+
+\section[Feature selection]{Introducing preliminary feature selection}
+Due to the high dimensionality of the dataset, the computations made on it take several minutes to be completed. In order to boost performances and with the goal to improve the accuracy of the models, our final attempt was to introduce a preemptive feature selection.
+
+\textit{Feature selection} can be seen as a preprocessing step, that works by selecting the best features on the basis of some specified tests.
+
+\texttt{Scikit-learn} exposes some choices for this purpose, among which \texttt{SelectKBest} and \texttt{SelectPercentile} (the former removing all but the \textit{k} highest scoring features, the latter keeping the specified percentage of highest scoring features). The scoring functions available for regression purposes are \texttt{f\textunderscore regression} (being able to capture linear correlations between features) and \texttt{mutual\textunderscore info\textunderscore regression} (which underlines some more particular correlations). Our choices for the solution were to use \texttt{SelectKBest} with \texttt{mutual\textunderscore info\textunderscore regression}.
+
+%TODO image, screen of the selected features
+
+%TODO complete comparison!
 
 
-\section[Third model]{Third model}
+%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones (applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99)
 
+%(for a comparison, NuSVR by itself on all those features: )
+
+%Feature selection from 24 + 12*3 features to 20, with k-best and mutual_info_regression:

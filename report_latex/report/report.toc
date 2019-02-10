@@ -5,8 +5,11 @@
 \contentsline {section}{\numberline {1.2}Understanding the data}{3}
 \contentsline {chapter}{\numberline {2}A first, na{\"i}ve model}{7}
 \contentsline {section}{\numberline {2.1}Basic Feature Benchmark}{7}
-\contentsline {chapter}{\numberline {3}More advanced models comparison}{11}
+\contentsline {chapter}{\numberline {3}More advanced models comparison and issues}{11}
 \contentsline {section}{\numberline {3.1}First model}{11}
 \contentsline {section}{\numberline {3.2}Second model}{13}
-\contentsline {section}{\numberline {3.3}Third model}{13}
-\contentsline {chapter}{Bibliography}{15}
+\contentsline {section}{\numberline {3.3}Overfitting}{14}
+\contentsline {section}{\numberline {3.4}Feature selection}{15}
+\contentsline {chapter}{\numberline {4}Infrastructure and tools}{17}
+\contentsline {section}{\numberline {4.1}Microsoft Azure VMs}{17}
+\contentsline {chapter}{Bibliography}{19}
