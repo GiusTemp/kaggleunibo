@@ -35,8 +35,8 @@ print(train.head())
 
 rows = 150000 
 segments = int( np.floor(train.shape[0]) / rows) 
-columns_X= ['std', 'max', 'min', 'mad','pp', 'kurt', 'skew',
-        'median', 'q01','q05', 'q95','q99', 'abs_std',
+columns_X= ['ave','std', 'max', 'min', 'mad','pp', 'kurt', 'skew',
+        'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
 'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
 'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99','std_mean_{window}','max_mean_{window}',
  'min_mean_{window}','mad_mean_{window}','pp_mean_{window}','kurt_mean_{window}',
@@ -53,10 +53,10 @@ for segment in tqdm(range(segments)):
     
 
     x = seg['acoustic_data'] 
-    y = seg['time_to_failure'].values[-1]
+    y = seg['time_to_failure'].min() #values[-1]
     
     y_train.loc[segment, 'time_to_failure'] = y
-    #X_train.loc[segment, 'ave'] = x.mean()
+    X_train.loc[segment, 'ave'] = x.mean()
     X_train.loc[segment, 'std'] = x.std()
     X_train.loc[segment, 'max'] = x.max()
     X_train.loc[segment, 'min'] = x.min()
@@ -69,7 +69,7 @@ for segment in tqdm(range(segments)):
     X_train.loc[segment, 'q05'] = np.quantile(x, 0.05)
     X_train.loc[segment, 'q95'] = np.quantile(x, 0.95)
     X_train.loc[segment, 'q99'] = np.quantile(x, 0.99) 
-    #X_train.loc[segment, 'abs_mean'] = x.abs().mean()
+    X_train.loc[segment, 'abs_mean'] = x.abs().mean()
     X_train.loc[segment, 'abs_std'] = x.abs().std()
     X_train.loc[segment, 'abs_max'] = x.abs().max()
     X_train.loc[segment, 'abs_min'] = x.abs().min()
@@ -150,7 +150,7 @@ for seg_id in X_test.index:
     
     x = seg['acoustic_data'] 
     
-   # X_test.loc[seg_id, 'ave'] = x.mean()
+    X_test.loc[seg_id, 'ave'] = x.mean()
     X_test.loc[seg_id, 'std'] = x.std()
     X_test.loc[seg_id, 'max'] = x.max()
     X_test.loc[seg_id, 'min'] = x.min()
@@ -163,7 +163,7 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'q05'] = np.quantile(x, 0.05)
     X_test.loc[seg_id, 'q95'] = np.quantile(x, 0.95)
     X_test.loc[seg_id, 'q99'] = np.quantile(x, 0.99)
-    #X_test.loc[seg_id, 'abs_mean'] = x.abs().mean()
+    X_test.loc[seg_id, 'abs_mean'] = x.abs().mean()
     X_test.loc[seg_id, 'abs_std'] = x.abs().std()
     X_test.loc[seg_id, 'abs_max'] = x.abs().max()
     X_test.loc[seg_id, 'abs_min'] = x.abs().min()
