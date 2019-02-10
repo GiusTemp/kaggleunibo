@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  7 FEB 2019 01:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  10 FEB 2019 14:12
 entering extended mode
 **./report.tex
 (report.tex
@@ -611,7 +611,7 @@ Package hyphenat Warning: *******************************
 \langwohyphens=\language76
 LaTeX Info: Redefining \_ on input line 43.
 ) (report.aux (frontespizio.aux) (Abstract.aux) (indice.aux) (capitolo1.aux)
-(capitolo2.aux) (capitolo3.aux))
+(capitolo2.aux) (capitolo3.aux) (capitolo4.aux))
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 65.
@@ -942,42 +942,58 @@ Chapter 2.
 ]
 Chapter 3.
 [11]
-Overfull \hbox (24.15617pt too wide) in paragraph at lines 56--57
+Overfull \hbox (24.15617pt too wide) in paragraph at lines 52--53
 []\T1/cmr/m/n/10.95 At this point, out of cu-rios-ity we took a look at the pre
 -dicted \T1/cmtt/l/n/10.95 time_to_failure
  []
 
-[12]) [13] [14
+[12] [13]
+
+LaTeX Warning: Reference `' on page 14 undefined on input line 125.
+
+[14] [15]) [16]
+\openout2 = `capitolo4.aux'.
+
+ (capitolo4.tex
+Chapter 4.
+) [17
+
+
+
+] [18
 
 
 
 ] (report.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 29--34
+Underfull \hbox (badness 10000) in paragraph at lines 51--56
 []\T1/cmr/m/n/10.95 Gabriel Preda.  LANL Earth-quake EDA and Pre-dic-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 29--34
+Underfull \hbox (badness 10000) in paragraph at lines 51--56
 \T1/cmr/m/n/10.95 tion.  2019.  URL: $\T1/cmtt/l/n/10.95 https : / / www . kagg
 le . com / gpreda /
  []
 
-) [15
+) [19
 
 ] (report.aux (frontespizio.aux) (Abstract.aux) (indice.aux)
-(capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
+(capitolo1.aux) (capitolo2.aux) (capitolo3.aux) (capitolo4.aux))
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 6037 strings out of 493323
- 80619 string characters out of 3128279
+ 6058 strings out of 493323
+ 80881 string characters out of 3128279
  318319 words of memory out of 3000000
- 9374 multiletter control sequences out of 15000+200000
+ 9388 multiletter control sequences out of 15000+200000
  21739 words of font info for 55 fonts, out of 3000000 for 9000
  1143 hyphenation exceptions out of 8191
- 39i,12n,43p,928b,1773s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,12n,43p,928b,1775s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi
 525\ectt0800.pk> <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\j
 knappen\ec\dpi600\ectt1095.pk> <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fon
@@ -996,9 +1012,9 @@ ecbx1200.pk><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
 ublic/amsfonts/cm/cmmi10.pfb><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Valentina/AppData/Local/
 Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on report.pdf (23 pages, 1430504 bytes).
+Output written on report.pdf (27 pages, 1455390 bytes).
 PDF statistics:
- 585 PDF objects out of 1000 (max. 8388607)
+ 638 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

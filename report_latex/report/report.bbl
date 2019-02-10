@@ -1,9 +1,19 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{challenge}
 L{ANL} {E}arthquake {P}rediction.
 \newblock 2019.
 \newblock URL: \url{https://www.kaggle.com/c/LANL-Earthquake-Prediction}.
+
+\bibitem{putty}
+Pu{TTY}.
+\newblock 2019.
+\newblock URL: \url{https://putty.org/}.
+
+\bibitem{xming}
+Xming.
+\newblock 2019.
+\newblock URL: \url{http://www.straightrunning.com/XmingNotes/}.
 
 \bibitem{kernelallunia}
 Allunia.
@@ -19,11 +29,23 @@ J.~R.~Leeman et~al.
 \newblock 2016.
 \newblock URL: \url{https://www.nature.com/articles/ncomms11104}.
 
+\bibitem{github}
+Tempesta Giuseppe and Protti Valentina.
+\newblock Git{H}ub solution repository.
+\newblock 2019.
+\newblock URL: \url{https://github.com/GiusTemp/kaggleunibo}.
+
 \bibitem{kernelinit}
 inversion.
 \newblock Basic {F}eature {B}enchmark.
 \newblock 2019.
 \newblock URL: \url{https://www.kaggle.com/inversion/basic-feature-benchmark}.
+
+\bibitem{azure}
+Microsoft.
+\newblock Azure {P}ortal.
+\newblock 2019.
+\newblock URL: \url{https://portal.azure.com/}.
 
 \bibitem{kernelpreda}
 Gabriel Preda.

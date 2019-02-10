@@ -5,6 +5,7 @@ A level-1 auxiliary file: indice.aux
 A level-1 auxiliary file: capitolo1.aux
 A level-1 auxiliary file: capitolo2.aux
 A level-1 auxiliary file: capitolo3.aux
+A level-1 auxiliary file: capitolo4.aux
 The style file: plainurl.bst
 Database file #1: bibl_report.bib
 Warning--entry type for "challenge" isn't style-file defined
@@ -15,9 +16,19 @@ Warning--entry type for "kernelallunia" isn't style-file defined
 --line 28 of file bibl_report.bib
 Warning--entry type for "kernelinit" isn't style-file defined
 --line 35 of file bibl_report.bib
+Warning--entry type for "github" isn't style-file defined
+--line 42 of file bibl_report.bib
+Warning--entry type for "azure" isn't style-file defined
+--line 49 of file bibl_report.bib
+Warning--entry type for "putty" isn't style-file defined
+--line 56 of file bibl_report.bib
+Warning--entry type for "xming" isn't style-file defined
+--line 62 of file bibl_report.bib
 Warning--to sort, need author or key in challenge
+Warning--to sort, need author or key in putty
+Warning--to sort, need author or key in xming
 Warning--empty institution in sloweq
 Warning--empty year in sloweq
 Warning--empty institution in mleq
 Warning--empty year in mleq
-(There were 9 warnings)
+(There were 15 warnings)
