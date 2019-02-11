@@ -11,6 +11,7 @@ from tqdm import tqdm
 from scipy.stats import kurtosis
 from scipy.stats import skew
 from sklearn.metrics import mean_absolute_error
+from sklearn.preprocessing import StandardScaler
 
 # In[1]:
 
@@ -104,20 +105,22 @@ print(X_train.head())
 # In[6]:
 
 #normalize train data
-#scaler = StandardScaler()
-#scaler.fit(X_train)
-#X_train_scaled = scaler.transform(X_train)
-#print(X_train_scaled)
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train_scaled = scaler.transform(X_train)
+print(X_train_scaled)
 
 # In[6]:
 #apply model
 
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.neural_network import MLPRegressor
 
-model = RandomForestRegressor(n_estimators=10000)
-model.fit(X_train, y_train.values.flatten())
+model = MLPRegressor(verbose=True,random_state=10, tol=0.000001, max_iter=800,
+        hidden_layer_sizes=800, shuffle=False)
 
-y_pred = model.predict(X_train)
+model.fit(X_train_scaled, y_train.values.flatten())
+
+y_pred = model.predict(X_train_scaled)
 
 # In[7]:
 plt.figure(figsize=(16, 8))
@@ -190,6 +193,6 @@ for seg_id in X_test.index:
         X_test.loc[seg_id, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
 
 
-#X_test_scaled = scaler.transform(X_test)
-submission['time_to_failure'] = model.predict(X_test)
+X_test_scaled = scaler.transform(X_test)
+submission['time_to_failure'] = model.predict(X_test_scaled)
 submission.to_csv('submission.csv')
