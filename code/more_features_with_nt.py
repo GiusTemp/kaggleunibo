@@ -11,7 +11,6 @@ from tqdm import tqdm
 from scipy.stats import kurtosis
 from scipy.stats import skew
 from sklearn.metrics import mean_absolute_error
-from sklearn.preprocessing import StandardScaler
 
 # In[1]:
 
@@ -35,10 +34,14 @@ print(train.head())
 
 rows = 150000 
 segments = int( np.floor(train.shape[0]) / rows) 
-columns_X= ['ave','std','max','min', 'mad','kurt', 'skew',
+columns_X=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew',
         'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
-        'abs_max','abs_min','abs_mad', 'abs_kurt','abs_skew',
-'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99']
+'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
+'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99',
+'mean_mean_{window}','std_mean_{window}','max_mean_{window}',
+ 'min_mean_{window}','mad_mean_{window}','kurt_mean_{window}',
+'skew_mean_{window}','median_mean_{window}','q01_mean_{window}','q05_mean_{window}','q95_mean_{window}',
+'q99_mean_{window}']
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64, columns=columns_X)
 
@@ -78,36 +81,48 @@ for segment in tqdm(range(segments)):
     X_train.loc[segment, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_train.loc[segment, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     
+    for window in [10, 100, 1000]:
+        data_roll_mean = x.rolling(window).mean().dropna()
+        X_train.loc[segment, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_train.loc[segment, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_train.loc[segment, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_train.loc[segment, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_train.loc[segment, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_train.loc[segment, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_train.loc[segment, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_train.loc[segment, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_train.loc[segment, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_train.loc[segment, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_train.loc[segment, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_train.loc[segment, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
+        
 # In[5]:
 
-#X_train.to_csv("X_train.csv")
-#print(X_train.head())
+X_train.to_csv("X_train.csv")
+print(X_train.head())
 
 # In[6]:
 
 #normalize train data
-scaler = StandardScaler()
-scaler.fit(X_train)
-X_train_scaled = scaler.transform(X_train)
-print(X_train_scaled)
+#scaler = StandardScaler()
+#scaler.fit(X_train)
+#X_train_scaled = scaler.transform(X_train)
+#print(X_train_scaled)
 
 # In[6]:
 #apply model
 
-from sklearn.linear_model import LinearRegression
-from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble import RandomForestRegressor
 
-model = MLPRegressor(verbose=True,random_state=10, tol=0.000001, max_iter=800,
-        hidden_layer_sizes=800, shuffle=False)
-#LinearRegression()
-model.fit(X_train_scaled, y_train.values.flatten())
+model = RandomForestRegressor(n_estimators=10000)
+model.fit(X_train, y_train.values.flatten())
 
-y_pred = model.predict(X_train_scaled)
+y_pred = model.predict(X_train)
 
 # In[7]:
 plt.figure(figsize=(16, 8))
 plt.plot(y_train, color='b', label='y_train')
-plt.plot(y_pred, color='gold', label='our_model')
+plt.plot(y_pred, color='gold', label='rfe')
 plt.legend();
 plt.title('Predictions vs actual');
 plt.show();
@@ -115,7 +130,7 @@ plt.show();
 
 
 # In[8]:
-score = mean_absolute_error(y_train.values, y_pred)
+score = mean_absolute_error(y_train.values.flatten(), y_pred)
 print(score)
 
 
@@ -158,7 +173,23 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     
-X_test_scaled = scaler.transform(X_test)
-submission['time_to_failure'] = model.predict(X_test_scaled)
-submission.to_csv('submission.csv')
+    
+    for window in [10, 100, 1000]:
+        data_roll_mean = x.rolling(window).mean().dropna()
+        X_test.loc[seg_id, 'mean_mean_{window}'] = data_roll_mean.mean().item()
+        X_test.loc[seg_id, 'std_mean_{window}'] = data_roll_mean.std().item()
+        X_test.loc[seg_id, 'max_mean_{window}'] = data_roll_mean.max().item()
+        X_test.loc[seg_id, 'min_mean_{window}'] = data_roll_mean.min().item()
+        X_test.loc[seg_id, 'mad_mean_{window}'] = data_roll_mean.mad().item()
+        X_test.loc[seg_id, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
+        X_test.loc[seg_id, 'skew_mean_{window}'] = data_roll_mean.skew().item()
+        X_test.loc[seg_id, 'median_mean_{window}'] = data_roll_mean.median().item()
+        X_test.loc[seg_id, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
+        X_test.loc[seg_id, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
+        X_test.loc[seg_id, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
+        X_test.loc[seg_id, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
 
+
+#X_test_scaled = scaler.transform(X_test)
+submission['time_to_failure'] = model.predict(X_test)
+submission.to_csv('submission.csv')
