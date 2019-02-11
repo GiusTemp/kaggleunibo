@@ -107,14 +107,21 @@ model.fit(X_train_scaled, y_train.values.flatten())
 y_pred = model.predict(X_train_scaled)
 
 # In[7]:
-plt.figure(figsize=(6, 6))
-plt.scatter(y_train.values, y_pred)
-plt.xlim(0, 20)
-plt.ylim(0, 20)
-plt.xlabel('actual', fontsize=12)
-plt.ylabel('predicted', fontsize=12)
-plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
-plt.show()
+#plt.figure(figsize=(6, 6))
+#plt.scatter(y_train.values, y_pred)
+#plt.xlim(0, 20)
+#plt.ylim(0, 20)
+#plt.xlabel('actual', fontsize=12)
+#plt.ylabel('predicted', fontsize=12)
+#plt.plot([(0, 0), (20, 20)], [(0, 0), (20, 20)])
+#plt.show()
+
+plt.figure(figsize=(16, 8))
+plt.plot(y_train, color='b', label='y_train')
+plt.plot(y_pred, color='gold', label='our_model')
+plt.legend();
+plt.title('Predictions vs actual');
+plt.show();
 
 
 # In[8]:

@@ -41,10 +41,18 @@ columns_X=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew',
         'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
 'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
 'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99',
-'mean_mean_{window}','std_mean_{window}','max_mean_{window}',
- 'min_mean_{window}','mad_mean_{window}','kurt_mean_{window}',
-'skew_mean_{window}','median_mean_{window}','q01_mean_{window}','q05_mean_{window}','q95_mean_{window}',
-'q99_mean_{window}']
+'mean_mean_10','std_mean_10','max_mean_10',
+ 'min_mean_10','mad_mean_10','kurt_mean_10',
+'skew_mean_10','median_mean_10','q01_mean_10','q05_mean_10','q95_mean_10',
+'q99_mean_10',
+'mean_mean_100','std_mean_100','max_mean_100',
+ 'min_mean_100','mad_mean_100','kurt_mean_100',
+'skew_mean_100','median_mean_100','q01_mean_100','q05_mean_100','q95_mean_100',
+'q99_mean_100',
+'mean_mean_1000','std_mean_1000','max_mean_1000',
+ 'min_mean_1000','mad_mean_1000','kurt_mean_1000',
+'skew_mean_1000','median_mean_1000','q01_mean_1000','q05_mean_1000','q95_mean_1000',
+'q99_mean_1000']
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64, columns=columns_X)
 
@@ -86,18 +94,18 @@ for segment in tqdm(range(segments)):
     
     for window in [10, 100, 1000]:
         data_roll_mean = x.rolling(window).mean().dropna()
-        X_train.loc[segment, 'mean_mean_{window}'] = data_roll_mean.mean().item()
-        X_train.loc[segment, 'std_mean_{window}'] = data_roll_mean.std().item()
-        X_train.loc[segment, 'max_mean_{window}'] = data_roll_mean.max().item()
-        X_train.loc[segment, 'min_mean_{window}'] = data_roll_mean.min().item()
-        X_train.loc[segment, 'mad_mean_{window}'] = data_roll_mean.mad().item()
-        X_train.loc[segment, 'kurt_mean_{window}'] = data_roll_mean.kurtosis().item()
-        X_train.loc[segment, 'skew_mean_{window}'] = data_roll_mean.skew().item()
-        X_train.loc[segment, 'median_mean_{window}'] = data_roll_mean.median().item()
-        X_train.loc[segment, 'q01_mean_{window}'] = np.quantile(data_roll_mean, 0.01)
-        X_train.loc[segment, 'q05_mean_{window}'] = np.quantile(data_roll_mean, 0.05)
-        X_train.loc[segment, 'q95_mean_{window}'] = np.quantile(data_roll_mean, 0.95)
-        X_train.loc[segment, 'q99_mean_{window}'] = np.quantile(data_roll_mean, 0.99)
+        X_train.loc[segment, 'mean_mean_' + str(window)] = data_roll_mean.mean().item()
+        X_train.loc[segment, 'std_mean_' + str(window)] = data_roll_mean.std().item()
+        X_train.loc[segment, 'max_mean_' + str(window)] = data_roll_mean.max().item()
+        X_train.loc[segment, 'min_mean_' + str(window)] = data_roll_mean.min().item()
+        X_train.loc[segment, 'mad_mean_' + str(window)] = data_roll_mean.mad().item()
+        X_train.loc[segment, 'kurt_mean_' + str(window)] = data_roll_mean.kurtosis().item()
+        X_train.loc[segment, 'skew_mean_' + str(window)] = data_roll_mean.skew().item()
+        X_train.loc[segment, 'median_mean_' + str(window)] = data_roll_mean.median().item()
+        X_train.loc[segment, 'q01_mean_' + str(window)] = np.quantile(data_roll_mean, 0.01)
+        X_train.loc[segment, 'q05_mean_' + str(window)] = np.quantile(data_roll_mean, 0.05)
+        X_train.loc[segment, 'q95_mean_' + str(window)] = np.quantile(data_roll_mean, 0.95)
+        X_train.loc[segment, 'q99_mean_' + str(window)] = np.quantile(data_roll_mean, 0.99)
         
 # In[5]:
 
