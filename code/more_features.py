@@ -97,8 +97,9 @@ print(X_train_scaled)
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 
-model = MLPRegressor(verbose=True,random_state=10, tol=0.0, 
-        max_iter=4000,hidden_layer_sizes=3000, shuffle=False)
+model = MLPRegressor(verbose=True,random_state=10, tol=0.0000001, 
+        max_iter=2000,hidden_layer_sizes=10000, shuffle=False
+        , warm_start=True,n_iter_no_change=500)
 #LinearRegression()
 model.fit(X_train_scaled, y_train.values.flatten())
 
