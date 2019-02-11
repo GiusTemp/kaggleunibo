@@ -76,14 +76,20 @@ X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
 
 The results obtained in terms of score and predictions using this set of 24 values entailed another slight improvement, giving a value of 2,097 for the mean absolute error (our score), and fewer negative predictions in \texttt{submission.csv}.
 
-After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,660}. Other attempts to improve this solution were unsatisfactory.
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/linear_regression_24f.png}
+	\caption{Linear Regression, 24 features, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:LR}
+\end{figure}
 
-%TODO image, plot
+After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,660}. Other attempts to improve this solution were unsatisfactory.
 
 %Linear Regression + 5 features (mean, std, pp, q05, q95) + 5*3 rolling windows features: 2,1076697 (pp = peak-to-peak value)
 %Linear Regression + 24 features + 12*3 rolling windows features: 2,111956
 
 \section[Second model]{Second model: Support Vector Regression on more features}
+\label{3.2}
 %Standard Scaler doesn't change the score
 %Lasso same param.: score is worse, increment alpha/num iterations? NO
 %Elastic Net same param, list of cv param : still score is worse; attempt 2, alpha set from None to 1, iterations from 1000 to 10000, tolerance from 0.0001 to 0.001 -> (1) errors, ravel() to flatten y_train; (2) array of dimension 0? deleted all the parameters to ElasticNetCV; (3) gave up; (4) on just one feature (mean) it works (3,048) NO
@@ -101,13 +107,34 @@ Results of changing the \texttt{kernel} parameter were the following, in terms o
 %	\item \texttt{sigmoid}:15.932038 (wtf)
 \end{itemize}
 
-%TODO image, plot
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/nu_svr_24f.png}
+	\caption{Support Vector Regression with \texttt{rbf}, 24 features, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:SVR}
+\end{figure}
 
 After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,609}.
 
-%\section[Third model]{Third model}
-%?
-%TODO ?
+\section[Feature selection]{Introducing preliminary feature selection}
+Due to the high dimensionality of the dataset, the computations made on it take several minutes to be completed. In order to boost performances and with the goal to improve the accuracy of the models, our next attempt was to introduce a preemptive feature selection.
+
+\textit{Feature selection} can be seen as a preprocessing step, that works by selecting the best features on the basis of some specified tests.
+
+\texttt{Scikit-learn} exposes some choices for this purpose, among which \texttt{SelectKBest} and \texttt{SelectPercentile} (the former removing all but the \textit{k} highest scoring features, the latter keeping the specified percentage of highest scoring features). The scoring functions available for regression purposes are \texttt{f\textunderscore regression} (being able to capture linear correlations between features) and \texttt{mutual\textunderscore info\textunderscore regression} (which underlines some more particular correlations). Our choices for the solution were to use \texttt{SelectKBest} with \texttt{mutual\textunderscore info\textunderscore regression} to select the best 10 features, to be tested afterwards with our most promising model up until now, \texttt{NuSVR} \ref{3.2}.
+
+The 10 selected features were the ones in image \ref{fig:}.
+
+%TODO image, screen of the selected features (in WHITE possibly)
+%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99) -> submitted: 1,588 (!)
+
+%TODO image, plot
+
+The score obtained on the training set with just the above mentioned features was 2,1138, which would seem not to improve the one obtained in \ref{3.2} without feature selection; but after submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,588}.
+
+\section[Third model]{Third model: Neural Network Regression}
+Neural Network Regression
+%TODO
 
 \section[Overfitting]{The problem of overfitting: Gaussian Processes and Random Forests}
 \textit{Gaussian Processes} are a versatile supervised learning method that aims at interpolating the observations and predicting results with some confidence intervals. Similarly to SVR, a kernel function must be specified.
@@ -122,9 +149,14 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 model = GaussianProcessRegressor()
 \end{lstlisting}
 
-The graph in \ref{} shows that [...]
+Indeed, the graph in \ref{fig:GP} shows that the predicted values perfectly overlap the real values of \texttt{time\textunderscore to\textunderscore failure} in the training set (notice that both have been plotted).
 
-%TODO image, plot
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/gpr_24f.png}
+	\caption{Gaussian Process Regression, 24 features, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:GP}
+\end{figure}
 
 However, when submitting our results to Kaggle's platform tempted by the above described performances, the score of this kernel was \textbf{2,792}, showing that the built model was indeed overfitted to the training data and performed very badly on the test data.
 
@@ -156,21 +188,3 @@ Results obtained by computing the score on the available data were very encourag
 %TODO recompute 0,77
 with 10000. After submitting our results to Kaggle's platform, though, the score of this kernel (the best case obtained) calculated by the system was \textbf{1,687}. Even if much better than GPs' results on test data, the score does not reflect the improvement obtained on the training set, showing also in this case that these more advanced models can be very precise in the building phase, but are prone to overfitting. A further development of this solution could perhaps be obtained through a better, more in-depth knowledge of the setting parameters, which was beyond the purpose of this exploring project activity.
 %Random Forest Regressor (n_estimators 200): 0,816861, submitted: 1,742; n_estimators 250 -> 0,81821; n_estimators 1000 -> 05; n_estimators 100000 ? + other results
-
-\section[Feature selection]{Introducing preliminary feature selection}
-Due to the high dimensionality of the dataset, the computations made on it take several minutes to be completed. In order to boost performances and with the goal to improve the accuracy of the models, our final attempt was to introduce a preemptive feature selection.
-
-\textit{Feature selection} can be seen as a preprocessing step, that works by selecting the best features on the basis of some specified tests.
-
-\texttt{Scikit-learn} exposes some choices for this purpose, among which \texttt{SelectKBest} and \texttt{SelectPercentile} (the former removing all but the \textit{k} highest scoring features, the latter keeping the specified percentage of highest scoring features). The scoring functions available for regression purposes are \texttt{f\textunderscore regression} (being able to capture linear correlations between features) and \texttt{mutual\textunderscore info\textunderscore regression} (which underlines some more particular correlations). Our choices for the solution were to use \texttt{SelectKBest} with \texttt{mutual\textunderscore info\textunderscore regression}.
-
-%TODO image, screen of the selected features
-
-%TODO complete comparison!
-
-
-%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones (applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99)
-
-%(for a comparison, NuSVR by itself on all those features: )
-
-%Feature selection from 24 + 12*3 features to 20, with k-best and mutual_info_regression:

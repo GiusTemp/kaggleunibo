@@ -7,4 +7,8 @@
 \contentsline {figure}{\numberline {1.5}{\ignorespaces Plot of four segments of the test data}}{5}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Linear Regression, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{13}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Support Vector Regression with \texttt {rbf}, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{14}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Gaussian Process Regression, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{16}
+\addvspace {10\p@ }
 \addvspace {10\p@ }
