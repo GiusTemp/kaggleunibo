@@ -21,7 +21,7 @@ from sklearn.kernel_ridge import KernelRidge
 
 # In[2]:
 
-train = pd.read_csv('../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
+train = pd.read_csv('../../../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
 print("Train loaded! ")
 
 # In[3]:
@@ -92,9 +92,28 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 from sklearn.ensemble import RandomForestRegressor
-model = RandomForestRegressor(n_estimators=10000)
+model = RandomForestRegressor(n_estimators=1000)
 
 model.fit(X_train, y_train.values.flatten())
+
+# feature importance (plot)
+importances = model.feature_importances_
+std = np.std([tree.feature_importances_ for tree in model.estimators_], axis=0)
+indices = np.argsort(importances)[::1]
+
+print("Feature ranking:")
+
+for f in range (X_train.shape[1]):
+    print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+
+plt.figure()
+plt.title("Feature importances")
+plt.bar(range(X_train.shape[1]), importances[indices], yerr=std[indices], align="center")
+plt.xticks(range(X_train.shape[1]), indices)
+plt.xlim([-1, X_train.shape[1]])
+plt.show()
+
+
 y_pred = model.predict(X_train)
 
 plt.figure(figsize=(16, 8))
@@ -125,7 +144,7 @@ print(score)
 
 # In[9]:
 print("reading all segments")
-submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id')
+submission = pd.read_csv('../../../../input/sample_submission.csv', index_col='seg_id')
 
 
 # In[10]:
@@ -133,7 +152,7 @@ submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id'
 X_test = pd.DataFrame(columns=X_train.columns, dtype=np.float64, index=submission.index)
 
 for seg_id in X_test.index:
-    seg = pd.read_csv('../../input/test/' + seg_id + '.csv')
+    seg = pd.read_csv('../../../../input/test/' + seg_id + '.csv')
     
     x = seg['acoustic_data'] 
     

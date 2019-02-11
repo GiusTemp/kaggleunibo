@@ -50,7 +50,7 @@ for segment in tqdm(range(segments)):
     
 
     x = seg['acoustic_data'] 
-    y = seg['time_to_failure'].min() #values[-1]
+    y = seg['time_to_failure'].values[-1]
     
     y_train.loc[segment, 'time_to_failure'] = y
     X_train.loc[segment, 'ave'] = x.mean()
@@ -95,19 +95,13 @@ print(X_train_scaled)
 #apply model
 
 from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.neural_network import MLPRegressor
 
-model2 = RandomForestRegressor(n_estimators=1000)
-model = LinearRegression()
-
+model = MLPRegressor(verbose=True,random_state=10, tol=0.01, max_iter=500,hidden_layer_sizes=300)
+#LinearRegression()
 model.fit(X_train, y_train)
-model2.fit(X_train, y_train.values.flatten())
 
-
-y_pred1 = model.predict(X_train)
-y_pred2 = model2.predict(X_train)
-
-y_pred = y_pred1/2 + y_pred2/2
+y_pred = model.predict(X_train)
 
 # In[7]:
 plt.figure(figsize=(16, 8))
@@ -164,6 +158,6 @@ for seg_id in X_test.index:
     X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     
 X_test_scaled = scaler.transform(X_test)
-submission['time_to_failure'] = model.predict(X_test)/2 + model2.predict(X_test)/2
+submission['time_to_failure'] = model.predict(X_test)
 submission.to_csv('submission.csv')
 
