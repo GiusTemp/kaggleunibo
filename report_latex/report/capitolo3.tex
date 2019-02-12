@@ -123,18 +123,35 @@ Due to the high dimensionality of the dataset, the computations made on it take 
 
 \texttt{Scikit-learn} exposes some choices for this purpose, among which \texttt{SelectKBest} and \texttt{SelectPercentile} (the former removing all but the \textit{k} highest scoring features, the latter keeping the specified percentage of highest scoring features). The scoring functions available for regression purposes are \texttt{f\textunderscore regression} (being able to capture linear correlations between features) and \texttt{mutual\textunderscore info\textunderscore regression} (which underlines some more particular correlations). Our choices for the solution were to use \texttt{SelectKBest} with \texttt{mutual\textunderscore info\textunderscore regression} to select the best 10 features, to be tested afterwards with our most promising model up until now, \texttt{NuSVR} \ref{3.2}.
 
-The 10 selected features were the ones in image \ref{fig:}.
+The 10 selected features were the ones in image \ref{fig:featsel}.
 
-%TODO image, screen of the selected features (in WHITE possibly)
-%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99) -> submitted: 1,588 (!)
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/featuresselez10_noroll.jpg}
+	\caption{10 features selected from \texttt{SelectKBest}.}
+	\label{fig:featsel}
+\end{figure}
 
-%TODO image, plot
+%TODO
+%Feature selection from 24 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99) -> submitted: 1,588 (!)
+%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,0988627 (mad, q01, q99, abs_mad, abs_q95, mad_mean_10, q01_mean_10, q05_mean_10, q95_mean_10, q99_mean_10) -> submitted: 1,592
+
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/nu_svr_featuresselez10.png}
+	\caption{Support Vector Regression with \texttt{rbf}, 10 selected features, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:svrsel}
+\end{figure}
 
 The score obtained on the training set with just the above mentioned features was 2,1138, which would seem not to improve the one obtained in \ref{3.2} without feature selection; but after submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,588}.
 
 \section[Third model]{Third model: Neural Network Regression}
 Neural Network Regression
-%TODO
+%TODO MLPRegressor, best parameters: 24 features, SCALING (bad performance otherwise), hidden_layer_sizes (1000), solver (SGD), batch_size, shuffle(=False), max_iter (2500), tol; 2,0015 train -> 1,540 test (!)
+% With warm_start it reaches max iterations, without it it doesn't
+%TODO image, plot
+%TODO image, table of attempts
+
 
 \section[Overfitting]{The problem of overfitting: Gaussian Processes and Random Forests}
 \textit{Gaussian Processes} are a versatile supervised learning method that aims at interpolating the observations and predicting results with some confidence intervals. Similarly to SVR, a kernel function must be specified.
@@ -182,9 +199,12 @@ model = RandomForestRegressor(n_estimators=10000)
 model.fit(X_train, y_train.values.flatten())
 \end{lstlisting}
 
-%TODO image, plot
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/randomforest10000.png}
+	\caption{Random Forest Regression, 24 features, 10.000 iterations, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:RF10000}
+\end{figure}
 
-Results obtained by computing the score on the available data were very encouraging: only 0,8146 for the training set while using 1000 estimators, and down to 0,77
-%TODO recompute 0,77
-with 10000. After submitting our results to Kaggle's platform, though, the score of this kernel (the best case obtained) calculated by the system was \textbf{1,687}. Even if much better than GPs' results on test data, the score does not reflect the improvement obtained on the training set, showing also in this case that these more advanced models can be very precise in the building phase, but are prone to overfitting. A further development of this solution could perhaps be obtained through a better, more in-depth knowledge of the setting parameters, which was beyond the purpose of this exploring project activity.
+Results obtained by computing the score on the available data were very encouraging: only 0,8146 for the training set while using 1000 estimators, and down to 0,7785 with 10000. After submitting our results to Kaggle's platform, though, the score of this kernel (the best case obtained) calculated by the system was \textbf{1,687}. Even if much better than GPs' results on test data, the score does not reflect the improvement obtained on the training set, showing also in this case that these more advanced models can be very precise in the building phase, but are prone to overfitting. A further development of this solution could perhaps be obtained through a better, more in-depth knowledge of the setting parameters, which was beyond the purpose of this exploring project activity.
 %Random Forest Regressor (n_estimators 200): 0,816861, submitted: 1,742; n_estimators 250 -> 0,81821; n_estimators 1000 -> 05; n_estimators 100000 ? + other results

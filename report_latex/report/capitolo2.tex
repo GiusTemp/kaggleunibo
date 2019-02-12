@@ -109,3 +109,10 @@ X_test_scaled = scaler.transform(X_test)
 submission['time_to_failure'] = svm.predict(X_test_scaled)
 submission.to_csv('submission.csv')
 \end{lstlisting}
+
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/naive.png}
+	\caption{Na{\"i}ve model, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:LR}
+\end{figure}

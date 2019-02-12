@@ -7,10 +7,20 @@
 \section[Microsoft Azure VMs]{Microsoft Azure Virtual Machines}
 In order to support heavy computations, we signed a subscription on the Microsoft Azure Platform \cite{azure}, that provides students with an initial credit of 100\$, and therefore the possibility to access (some of) their virtual machines.
 
-%TODO image, Azure screen
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{pictures/azure.png}
+	\caption{Azure Platform screenshot.}
+	\label{fig:azure}
+\end{figure}
 
 According to the limitations given to student accounts, we instantiated the machine with the maximum of cores and GBs of RAM possible, which happened to be the NC6 Standard machine (with 6 virtual CPUs and 56 GBs RAM). Python was already installed on it, and we only had to install the other libraries (like \texttt{scikit-learn}) in order for our scripts to run. Access to the machine was made possible through SSH connection established through the \textit{PuTTY} client installed on our laptops \cite{putty}. Graphic visualization of the plots presented in the report were made available through \textit{Xming} \cite{xming}.
 
-%TODO image, screen of cmd + plot?
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{pictures/cmd.png}
+	\caption{Command line with SSH access to the VM.}
+	\label{fig:cmd}
+\end{figure}
 
 The whole collection of \texttt{.py} scripts explored and the various results obtained have been saved and stored in a repository, available on GitHub \cite{github}.
