@@ -6,9 +6,17 @@
 \contentsline {figure}{\numberline {1.4}{\ignorespaces Plot of the first 1\% of the training data}}{4}
 \contentsline {figure}{\numberline {1.5}{\ignorespaces Plot of four segments of the test data}}{5}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Na{\"i}ve model, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{9}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Linear Regression, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{13}
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Support Vector Regression with \texttt {rbf}, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{14}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Gaussian Process Regression, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{16}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces 10 features selected from \texttt {SelectKBest}.}}{15}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Support Vector Regression with \texttt {rbf}, 10 selected features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{15}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Attempts and results on different parameters settings.}}{17}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Best MLP Regression, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{18}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Gaussian Process Regression, 24 features, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{19}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Random Forest Regression, 24 features, 10.000 iterations, \texttt {time\textunderscore to\textunderscore failure} predictions vs real values.}}{20}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Azure Platform screenshot.}}{21}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Command line with SSH access to the VM.}}{22}
 \addvspace {10\p@ }

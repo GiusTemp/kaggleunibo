@@ -83,7 +83,7 @@ The results obtained in terms of score and predictions using this set of 24 valu
 	\label{fig:LR}
 \end{figure}
 
-After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,660}. Other attempts to improve this solution were unsatisfactory.
+After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,660}. Other attempts to improve this solution by adding more features were unsatisfactory.
 
 %Linear Regression + 5 features (mean, std, pp, q05, q95) + 5*3 rolling windows features: 2,1076697 (pp = peak-to-peak value)
 %Linear Regression + 24 features + 12*3 rolling windows features: 2,111956
@@ -119,7 +119,7 @@ After submitting our results to Kaggle's platform, the score of this kernel calc
 \section[Feature selection]{Introducing preliminary feature selection}
 Due to the high dimensionality of the dataset, the computations made on it take several minutes to be completed. In order to boost performances and with the goal to improve the accuracy of the models, our next attempt was to introduce a preemptive feature selection.
 
-\textit{Feature selection} can be seen as a preprocessing step, that works by selecting the best features on the basis of some specified tests.
+\textit{Feature selection} can be seen as a pre-processing step, that works by selecting the best features on the basis of some specified tests.
 
 \texttt{Scikit-learn} exposes some choices for this purpose, among which \texttt{SelectKBest} and \texttt{SelectPercentile} (the former removing all but the \textit{k} highest scoring features, the latter keeping the specified percentage of highest scoring features). The scoring functions available for regression purposes are \texttt{f\textunderscore regression} (being able to capture linear correlations between features) and \texttt{mutual\textunderscore info\textunderscore regression} (which underlines some more particular correlations). Our choices for the solution were to use \texttt{SelectKBest} with \texttt{mutual\textunderscore info\textunderscore regression} to select the best 10 features, to be tested afterwards with our most promising model up until now, \texttt{NuSVR} \ref{3.2}.
 
@@ -132,26 +132,66 @@ The 10 selected features were the ones in image \ref{fig:featsel}.
 	\label{fig:featsel}
 \end{figure}
 
-%TODO
-%Feature selection from 24 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,113821 (std, mad, q01, q05, q95, q99, abs_mean, abs_mad, abs_q95, abs_q99) -> submitted: 1,588 (!)
-%Feature selection from 24 + 12*3 features to 10, with k-best and mutual_info_regression, just to see which are the most relevant ones, applied then to NuSVR: 2,0988627 (mad, q01, q99, abs_mad, abs_q95, mad_mean_10, q01_mean_10, q05_mean_10, q95_mean_10, q99_mean_10) -> submitted: 1,592
-
 \begin{figure} [h]
 	\centering
-	\includegraphics[width=1\linewidth]{pictures/nu_svr_featuresselez10.png}
+	\includegraphics[width=1\linewidth]{pictures/nu_svr_featuresel10.png}
 	\caption{Support Vector Regression with \texttt{rbf}, 10 selected features, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
 	\label{fig:svrsel}
 \end{figure}
 
-The score obtained on the training set with just the above mentioned features was 2,1138, which would seem not to improve the one obtained in \ref{3.2} without feature selection; but after submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,588}.
+The score obtained on the training set with just the above mentioned features was 2,1138, which would seem not to improve the one obtained in \ref{3.2} without feature selection; after submitting our results to Kaggle's platform though, the score of this kernel calculated by the system was \textbf{1,588}.
 
 \section[Third model]{Third model: Neural Network Regression}
-Neural Network Regression
-%TODO MLPRegressor, best parameters: 24 features, SCALING (bad performance otherwise), hidden_layer_sizes (1000), solver (SGD), batch_size, shuffle(=False), max_iter (2500), tol; 2,0015 train -> 1,540 test (!)
-% With warm_start it reaches max iterations, without it it doesn't
-%TODO image, plot
-%TODO image, table of attempts
+Artificial Neural Networks are computing systems inspired by biological neural networks, that learn to perform tasks by taking examples as input, generally without any task-specific rule. 
+In particular, a MultiLayer Perceptron (MLP) is made at least of 3 layers: input, output and one or more hidden layers (neurons that use non-linear activation functions); thanks to the complexity, MLP can distinguish non-linearly separable data.
 
+Implementation of MLP Regressor in \texttt{scikit-learn} has a huge set of parameters to define in order to be able to refine the model.
+Our exploration focused on some of them:
+\begin{itemize}
+	\item \texttt{hidden\textunderscore layer\textunderscore sizes}, number of neurons in each hidden layer;
+	\item \texttt{max\textunderscore iter}, maximum number of iterations;
+	\item \texttt{solver}; the default is \texttt{adam}, a stochastic gradient-based optimizer that works well on large datasets, but other options are \texttt{sgd}, a stochastic gradient descent, and \texttt{lbfgs}, from the family of quasi-Newton methods;
+	\item \texttt{warm\textunderscore start}, a boolean option that enables or disables initialization of the next call with the previous solution.
+\end{itemize}
+Various attempts on so-constructed models showed that scaling is highly recommended for performance reasons.
+
+Picture \ref{fig:NNtries} is a synthetic representation of the different parameters settings we had the chance to test. Other than the described parameters, we also diversified the number of features used as input for the models; the results shown are computed on the training set by us, and on a portion of the test set by submitting the solutions to Kaggle's platform. What can be inferred from them is that the solution seem to work well on a medium to large-sized set of features (24 to 60) and on a smaller number of hidden layer neurons.
+
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{pictures/graph.png}
+	\caption{Attempts and results on different parameters settings.}
+	\label{fig:NNtries}
+\end{figure}
+
+\bigbreak
+
+Aside from these tries, the most successful attempt with a score of 2,0015 on the training set had the following settings:
+\begin{itemize}
+	\item number of features: 24;
+	\item \texttt{hidden\textunderscore layer\textunderscore sizes}: 1000;
+	\item \texttt{max\textunderscore iter}: 2500;
+	\item \texttt{solver}: sgd;
+	\item \texttt{warm\textunderscore start}: false.
+\end{itemize}
+Other settings in the following snippet are to print progress messages (\texttt{verbose}), to set the tolerance of the loss score between consecutive iterations (\texttt{tol}) and not to shuffle samples between iterations (\texttt{shuffle}).
+
+\begin{lstlisting}[firstnumber=14]
+from sklearn.neural_network import MLPRegressor
+\end{lstlisting}
+
+\begin{lstlisting}[firstnumber=109]
+model = MLPRegressor(verbose=True, random_state=10, tol=0.000001, max_iter=2500, hidden_layer_sizes=1000, shuffle=False, solver='sgd')
+\end{lstlisting}
+
+\begin{figure} [h]
+	\centering
+	\includegraphics[width=1\linewidth]{pictures/bestnn.png}
+	\caption{Best MLP Regression, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
+	\label{fig:MLP}
+\end{figure}
+
+After submitting our results to Kaggle's platform, the score of this kernel calculated by the system was \textbf{1,540}.
 
 \section[Overfitting]{The problem of overfitting: Gaussian Processes and Random Forests}
 \textit{Gaussian Processes} are a versatile supervised learning method that aims at interpolating the observations and predicting results with some confidence intervals. Similarly to SVR, a kernel function must be specified.

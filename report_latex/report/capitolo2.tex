@@ -80,7 +80,7 @@ svm.fit(X_train_scaled, y_train.values.flatten())
 y_pred = svm.predict(X_train_scaled)
 \end{lstlisting}
 
-The results predicted are then compared with the actual training data, by computing the \textit{Mean Absolute Error}, and finally the test data is prepared and fed to the model and results are printed to the \texttt{submission.csv} file. As expected, this simple model has a score of 2,314 on the training set (the score on the test set can only be computed by the competition's promoters), which denotes a really bad performance.
+The results predicted are then compared with the actual training data, by computing the \textit{Mean Absolute Error}, and finally the test data is prepared and fed to the model and results are printed to the \texttt{submission.csv} file. As expected, this simple model has a score of 2,314 on the training set (the score on the test set can only be computed by the competition's promoters), which denotes a really bad performance \ref{fig:naive}.
 
 \begin{lstlisting}[firstnumber=48]
 score = mean_absolute_error(y_train.values.flatten(), y_pred)
@@ -114,5 +114,5 @@ submission.to_csv('submission.csv')
 	\centering
 	\includegraphics[width=1\linewidth]{pictures/naive.png}
 	\caption{Na{\"i}ve model, \texttt{time\textunderscore to\textunderscore failure} predictions vs real values.}
-	\label{fig:LR}
+	\label{fig:naive}
 \end{figure}

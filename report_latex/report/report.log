@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  11 FEB 2019 18:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  12 FEB 2019 23:21
 entering extended mode
 **./report.tex
 (report.tex
@@ -842,7 +842,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 
-] (report.lof)
+] (report.lof
+Overfull \hbox (23.5358pt too wide) in paragraph at lines 12--12
+ [][] []\T1/cmr/m/n/10.95 Support Vec-tor Re-gres-sion with \T1/cmtt/l/n/10.95 
+rbf\T1/cmr/m/n/10.95 , 24 fea-tures, \T1/cmtt/l/n/10.95 time_to_failure 
+ []
+
+
+Overfull \hbox (63.78821pt too wide) in paragraph at lines 18--18
+ [][] []\T1/cmr/m/n/10.95 Random For-est Re-gres-sion, 24 fea-tures, 10.000 it-
+er-a-tions, \T1/cmtt/l/n/10.95 time_to_failure 
+ []
+
+)
 \tf@lof=\write4
 \openout4 = `report.lof'.
 
@@ -932,7 +944,13 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 ]
 Chapter 2.
-[7] [8]) [9]
+[7] [8] <pictures/naive.png, id=74, 936.6192pt x 494.3268pt>
+File: pictures/naive.png Graphic file (type png)
+
+<use pictures/naive.png>
+Package pdftex.def Info: pictures/naive.png used on input line 115.
+(pdftex.def)             Requested size: 360.0pt x 190.00337pt.
+) [9 <./pictures/naive.png>]
 \openout2 = `capitolo3.aux'.
 
  (capitolo3.tex [10
@@ -947,14 +965,14 @@ Overfull \hbox (24.15617pt too wide) in paragraph at lines 52--53
 -dicted \T1/cmtt/l/n/10.95 time_to_failure
  []
 
-[12] <pictures/linear_regression_24f.png, id=89, 987.2082pt x 385.1991pt>
+[12] <pictures/linear_regression_24f.png, id=91, 987.2082pt x 385.1991pt>
 File: pictures/linear_regression_24f.png Graphic file (type png)
 
 <use pictures/linear_regression_24f.png>
 Package pdftex.def Info: pictures/linear_regression_24f.png used on input line 
 81.
 (pdftex.def)             Requested size: 360.0pt x 140.47012pt.
- [13 <./pictures/linear_regression_24f.png>] <pictures/nu_svr_24f.png, id=94, 9
+ [13 <./pictures/linear_regression_24f.png>] <pictures/nu_svr_24f.png, id=96, 9
 87.2082pt x 302.0886pt>
 File: pictures/nu_svr_24f.png Graphic file (type png)
 
@@ -968,38 +986,108 @@ Underfull \hbox (badness 7256) in paragraph at lines 113--113
  []
 
 [14 <./pictures/nu_svr_24f.png>]
+<pictures/featuresselez10_noroll.jpg, id=101, 392.21532pt x 133.24782pt>
+File: pictures/featuresselez10_noroll.jpg Graphic file (type jpg)
 
-LaTeX Warning: Reference `fig:' on page 15 undefined on input line 126.
+<use pictures/featuresselez10_noroll.jpg>
+Package pdftex.def Info: pictures/featuresselez10_noroll.jpg used on input line
+ 130.
+(pdftex.def)             Requested size: 360.0pt x 122.31091pt.
 
-<pictures/gpr_24f.png, id=99, 650.43pt x 255.8358pt>
+<pictures/nu_svr_featuresel10.png, id=102, 922.1652pt x 416.9979pt>
+File: pictures/nu_svr_featuresel10.png Graphic file (type png)
+
+<use pictures/nu_svr_featuresel10.png>
+Package pdftex.def Info: pictures/nu_svr_featuresel10.png used on input line 13
+7.
+(pdftex.def)             Requested size: 360.0pt x 162.78758pt.
+
+Underfull \vbox (badness 1430) has occurred while \output is active []
+
+ [15 <./pictures/featuresselez10_noroll.jpg> <./pictures/nu_svr_featuresel10.pn
+g>]
+<pictures/graph.png, id=107, 436.63126pt x 296.60812pt>
+File: pictures/graph.png Graphic file (type png)
+
+<use pictures/graph.png>
+Package pdftex.def Info: pictures/graph.png used on input line 162.
+(pdftex.def)             Requested size: 323.9978pt x 220.09756pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[16]
+Overfull \hbox (12.22134pt too wide) in paragraph at lines 177--178
+\T1/cmr/m/n/10.95 Other set-tings in the fol-low-ing snip-pet are to print prog
+ress mes-sages (\T1/cmtt/l/n/10.95 verbose\T1/cmr/m/n/10.95 ),
+ []
+
+<pictures/bestnn.png, id=111, 987.2082pt x 484.9317pt>
+File: pictures/bestnn.png Graphic file (type png)
+
+<use pictures/bestnn.png>
+Package pdftex.def Info: pictures/bestnn.png used on input line 189.
+(pdftex.def)             Requested size: 360.0pt x 176.83951pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[17 <./pictures/graph.png>]
+<pictures/gpr_24f.png, id=116, 650.43pt x 255.8358pt>
 File: pictures/gpr_24f.png Graphic file (type png)
 
 <use pictures/gpr_24f.png>
-Package pdftex.def Info: pictures/gpr_24f.png used on input line 156.
+Package pdftex.def Info: pictures/gpr_24f.png used on input line 213.
 (pdftex.def)             Requested size: 360.0pt x 141.60408pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[15] [16 <./pictures/gpr_24f.png>]) [17]
+[18 <./pictures/bestnn.png>]
+<pictures/randomforest10000.png, id=121, 990.099pt x 447.3513pt>
+File: pictures/randomforest10000.png Graphic file (type png)
+
+<use pictures/randomforest10000.png>
+Package pdftex.def Info: pictures/randomforest10000.png used on input line 244.
+
+(pdftex.def)             Requested size: 360.0pt x 162.65729pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+) [19 <./pictures/gpr_24f.png>] [20 <./pictures/randomforest10000.png>]
 \openout2 = `capitolo4.aux'.
 
- (capitolo4.tex [18
 
-
-
-]
+(capitolo4.tex
 Chapter 4.
-) [19]
+<pictures/azure.png, id=130, 1016.29688pt x 418.56375pt>
+File: pictures/azure.png Graphic file (type png)
+
+<use pictures/azure.png>
+Package pdftex.def Info: pictures/azure.png used on input line 12.
+(pdftex.def)             Requested size: 323.9978pt x 133.43857pt.
+ [21
+
+
+
+ <./pictures/azure.png>]
+<pictures/cmd.png, id=134, 514.92375pt x 547.2947pt>
+File: pictures/cmd.png Graphic file (type png)
+ <use pictures/cmd.png>
+Package pdftex.def Info: pictures/cmd.png used on input line 21.
+(pdftex.def)             Requested size: 251.9989pt x 267.83435pt.
+)
+[22 <./pictures/cmd.png>]
 \openout2 = `conclusioni.aux'.
 
- (conclusioni.tex [20
-
-
-
-]
+ (conclusioni.tex
 Chapter 5.
-) [21] [22
+) [23
+
+
+
+] [24
 
 
 
@@ -1014,7 +1102,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 51--56
 le . com / gpreda /
  []
 
-) [23
+) [25
 
 ] (report.aux (frontespizio.aux) (Abstract.aux) (indice.aux)
 (capitolo1.aux) (capitolo2.aux) (capitolo3.aux) (capitolo4.aux)
@@ -1022,18 +1110,15 @@ le . com / gpreda /
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
  ) 
 Here is how much of TeX's memory you used:
- 6086 strings out of 493323
- 81458 string characters out of 3128279
+ 6144 strings out of 493323
+ 82704 string characters out of 3128279
  318319 words of memory out of 3000000
- 9406 multiletter control sequences out of 15000+200000
+ 9456 multiletter control sequences out of 15000+200000
  21739 words of font info for 55 fonts, out of 3000000 for 9000
  1143 hyphenation exceptions out of 8191
- 39i,12n,43p,928b,1775s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 39i,12n,43p,965b,1775s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\jknappen\ec\dpi
 525\ectt0800.pk> <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\j
 knappen\ec\dpi600\ecsl1095.pk> <C:\Users\Valentina\AppData\Local\MiKTeX\2.9\fon
@@ -1052,9 +1137,9 @@ ecbx1200.pk><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
 ublic/amsfonts/cm/cmmi10.pfb><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Valentina/AppData/Local/
 Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on report.pdf (31 pages, 1651803 bytes).
+Output written on report.pdf (33 pages, 2167821 bytes).
 PDF statistics:
- 664 PDF objects out of 1000 (max. 8388607)
+ 687 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
