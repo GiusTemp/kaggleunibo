@@ -35,7 +35,10 @@ print(train.head())
 
 rows = 150000 
 segments = int( np.floor(train.shape[0]) / rows) 
-columns_X= ['std','mad','q01','q05', 'q95','q99','abs_std','abs_mad','abs_q95', 'abs_q99']
+columns_X= ['ave','std','max','min', 'mad','kurt', 'skew',
+        'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
+        'abs_max','abs_min','abs_mad', 'abs_kurt','abs_skew',
+'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99']
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64, columns=columns_X)
 
@@ -50,14 +53,28 @@ for segment in tqdm(range(segments)):
     y = seg['time_to_failure'].values[-1]
     
     y_train.loc[segment, 'time_to_failure'] = y
+    X_train.loc[segment, 'ave'] = x.mean()
     X_train.loc[segment, 'std'] = x.std()
+    X_train.loc[segment, 'max'] = x.max()
+    X_train.loc[segment, 'min'] = x.min()
     X_train.loc[segment, 'mad'] = x.mad()
+    X_train.loc[segment, 'kurt'] = kurtosis(x)
+    X_train.loc[segment, 'skew'] = skew(x)
+    X_train.loc[segment, 'median'] = x.median()
     X_train.loc[segment, 'q01'] = np.quantile(x, 0.01)
     X_train.loc[segment, 'q05'] = np.quantile(x, 0.05)
     X_train.loc[segment, 'q95'] = np.quantile(x, 0.95)
     X_train.loc[segment, 'q99'] = np.quantile(x, 0.99) 
+    X_train.loc[segment, 'abs_mean'] = x.abs().mean()
     X_train.loc[segment, 'abs_std'] = x.abs().std()
+    X_train.loc[segment, 'abs_max'] = x.abs().max()
+    X_train.loc[segment, 'abs_min'] = x.abs().min()
     X_train.loc[segment, 'abs_mad'] = x.abs().mad()
+    X_train.loc[segment, 'abs_kurt'] = kurtosis(x.abs())
+    X_train.loc[segment, 'abs_skew'] = skew(x.abs())
+    X_train.loc[segment, 'abs_median'] = x.abs().median()
+    X_train.loc[segment, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_train.loc[segment, 'abs_q05'] = np.quantile(x.abs(), 0.05)
     X_train.loc[segment, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_train.loc[segment, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     
@@ -80,9 +97,8 @@ print(X_train_scaled)
 from sklearn.linear_model import LinearRegression
 from sklearn.neural_network import MLPRegressor
 
-model = MLPRegressor(verbose=True,random_state=10, tol=0.0000001, 
-        max_iter=2500,hidden_layer_sizes=2000, shuffle=False,
-        warm_start=True, solver='sgd',n_iter_no_change=500)
+model = MLPRegressor(verbose=True,random_state=10, tol=0.000001, max_iter=2500,
+        hidden_layer_sizes=1000, shuffle=False, solver='sgd')
 #LinearRegression()
 model.fit(X_train_scaled, y_train.values.flatten())
 
@@ -117,14 +133,28 @@ for seg_id in X_test.index:
     
     x = seg['acoustic_data'] 
     
+    X_test.loc[seg_id, 'ave'] = x.mean()
     X_test.loc[seg_id, 'std'] = x.std()
+    X_test.loc[seg_id, 'max'] = x.max()
+    X_test.loc[seg_id, 'min'] = x.min()
     X_test.loc[seg_id, 'mad'] = x.mad()
+    X_test.loc[seg_id, 'kurt'] = kurtosis(x)
+    X_test.loc[seg_id, 'skew'] = skew(x)
+    X_test.loc[seg_id, 'median'] = x.median()
     X_test.loc[seg_id, 'q01'] = np.quantile(x, 0.01)
     X_test.loc[seg_id, 'q05'] = np.quantile(x, 0.05)
     X_test.loc[seg_id, 'q95'] = np.quantile(x, 0.95)
     X_test.loc[seg_id, 'q99'] = np.quantile(x, 0.99)
+    X_test.loc[seg_id, 'abs_mean'] = x.abs().mean()
     X_test.loc[seg_id, 'abs_std'] = x.abs().std()
+    X_test.loc[seg_id, 'abs_max'] = x.abs().max()
+    X_test.loc[seg_id, 'abs_min'] = x.abs().min()
     X_test.loc[seg_id, 'abs_mad'] = x.abs().mad()
+    X_test.loc[seg_id, 'abs_kurt'] = kurtosis(x.abs())
+    X_test.loc[seg_id, 'abs_skew'] = skew(x.abs())
+    X_test.loc[seg_id, 'abs_median'] = x.abs().median()
+    X_test.loc[seg_id, 'abs_q01'] = np.quantile(x.abs(), 0.01)
+    X_test.loc[seg_id, 'abs_q05'] = np.quantile(x.abs(), 0.05)
     X_test.loc[seg_id, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_test.loc[seg_id, 'abs_q99'] = np.quantile(x.abs(), 0.99)
     

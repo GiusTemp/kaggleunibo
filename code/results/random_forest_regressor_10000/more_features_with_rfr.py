@@ -18,7 +18,7 @@ from sklearn.metrics import mean_absolute_error
 
 # In[2]:
 
-train = pd.read_csv('../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
+train = pd.read_csv('../../../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
 print("Train loaded! ")
 
 # In[3]:
@@ -136,7 +136,7 @@ print(score)
 
 # In[9]:
 print("reading all segments")
-submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id')
+submission = pd.read_csv('../../../../input/sample_submission.csv', index_col='seg_id')
 
 
 # In[10]:
@@ -144,7 +144,7 @@ submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id'
 X_test = pd.DataFrame(columns=X_train.columns, dtype=np.float64, index=submission.index)
 
 for seg_id in X_test.index:
-    seg = pd.read_csv('../../input/test/' + seg_id + '.csv')
+    seg = pd.read_csv('../../../../input/test/' + seg_id + '.csv')
     
     x = seg['acoustic_data'] 
     

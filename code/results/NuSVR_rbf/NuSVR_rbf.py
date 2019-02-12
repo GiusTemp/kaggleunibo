@@ -21,7 +21,7 @@ from sklearn.kernel_ridge import KernelRidge
 
 # In[2]:
 
-train = pd.read_csv('../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
+train = pd.read_csv('../../../../input/train.csv', dtype={'acoustic_data': np.int16, 'time_to_failure': np.float64})
 print("Train loaded! ")
 
 # In[3]:
@@ -39,10 +39,11 @@ rows = 150000
 segments = int( np.floor(train.shape[0]) / rows) 
 
 X_train = pd.DataFrame(index=range(segments), dtype=np.float64,
-    columns=['ave', 'std', 'max', 'min', 'mad', 'kurt', 'skew',
-        'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
-'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
-'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99'])
+    columns=['ave', 'std', 'max', 'min'])
+    #, 'mad', 'kurt', 'skew',
+    #    'median', 'q01','q05', 'q95','q99','abs_mean', 'abs_std',
+#'abs_max', 'abs_min', 'abs_mad', 'abs_kurt','abs_skew',
+#'abs_median','abs_q01', 'abs_q05', 'abs_q95', 'abs_q99'])
 
 y_train = pd.DataFrame(index=range(segments), dtype=np.float64,
                        columns=['time_to_failure'])
@@ -55,11 +56,12 @@ for segment in tqdm(range(segments)):
     y = seg['time_to_failure'].values[-1]
     
     y_train.loc[segment, 'time_to_failure'] = y
+   
     X_train.loc[segment, 'ave'] = x.mean()
     X_train.loc[segment, 'std'] = x.std()
     X_train.loc[segment, 'max'] = x.max()
     X_train.loc[segment, 'min'] = x.min()
-    X_train.loc[segment, 'mad'] = x.mad()
+'''    X_train.loc[segment, 'mad'] = x.mad()
     X_train.loc[segment, 'kurt'] = kurtosis(x)
     X_train.loc[segment, 'skew'] = skew(x)
     X_train.loc[segment, 'median'] = x.median()
@@ -79,6 +81,7 @@ for segment in tqdm(range(segments)):
     X_train.loc[segment, 'abs_q05'] = np.quantile(x.abs(), 0.05)
     X_train.loc[segment, 'abs_q95'] = np.quantile(x.abs(), 0.95)
     X_train.loc[segment, 'abs_q99'] = np.quantile(x.abs(), 0.99)
+'''
 # In[5]:
 
 X_train.to_csv("X_train.csv")
@@ -96,9 +99,9 @@ print(X_train_scaled)
 # In[6]:
 #apply model
 
-from sklearn.isotonic import IsotonicRegression
-from sklearn.linear_model import ElasticNet
-from sklearn.gaussian_process import GaussianProcessRegressor
+#from sklearn.isotonic import IsotonicRegression
+#from sklearn.linear_model import ElasticNet
+#from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn import svm
 from sklearn.svm import NuSVR
 model = NuSVR()
@@ -118,7 +121,7 @@ y_pred = model.predict(X_train_scaled)
 
 plt.figure(figsize=(16, 8))
 plt.plot(y_train, color='b', label='y_train')
-plt.plot(y_pred, color='gold', label='our_model')
+plt.plot(y_pred, color='gold', label='naive_model')
 plt.legend();
 plt.title('Predictions vs actual');
 plt.show();
@@ -128,7 +131,7 @@ plt.show();
 score = mean_absolute_error(y_train.values.flatten(), y_pred)
 print(score)
 
-
+'''
 # In[9]:
 print("reading all segments")
 submission = pd.read_csv('../../input/sample_submission.csv', index_col='seg_id')
@@ -170,4 +173,4 @@ for seg_id in X_test.index:
 
 X_test_scaled = scaler.transform(X_test)
 submission['time_to_failure'] = model.predict(X_test_scaled)
-submission.to_csv('submission.csv')
+submission.to_csv('submission.csv')'''
