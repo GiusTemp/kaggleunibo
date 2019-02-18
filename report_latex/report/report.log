@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  12 FEB 2019 23:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.9.13)  18 FEB 2019 19:36
 entering extended mode
 **./report.tex
 (report.tex
@@ -1006,12 +1006,12 @@ Underfull \vbox (badness 1430) has occurred while \output is active []
 
  [15 <./pictures/featuresselez10_noroll.jpg> <./pictures/nu_svr_featuresel10.pn
 g>]
-<pictures/graph.png, id=107, 436.63126pt x 296.60812pt>
-File: pictures/graph.png Graphic file (type png)
+<pictures/table2.png, id=107, 492.33937pt x 331.2375pt>
+File: pictures/table2.png Graphic file (type png)
 
-<use pictures/graph.png>
-Package pdftex.def Info: pictures/graph.png used on input line 162.
-(pdftex.def)             Requested size: 323.9978pt x 220.09756pt.
+<use pictures/table2.png>
+Package pdftex.def Info: pictures/table2.png used on input line 162.
+(pdftex.def)             Requested size: 323.9978pt x 217.99068pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -1032,7 +1032,7 @@ Package pdftex.def Info: pictures/bestnn.png used on input line 189.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[17 <./pictures/graph.png>]
+[17 <./pictures/table2.png>]
 <pictures/gpr_24f.png, id=116, 650.43pt x 255.8358pt>
 File: pictures/gpr_24f.png Graphic file (type png)
 
@@ -1113,7 +1113,7 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
  ) 
 Here is how much of TeX's memory you used:
  6144 strings out of 493323
- 82704 string characters out of 3128279
+ 82709 string characters out of 3128279
  318319 words of memory out of 3000000
  9456 multiletter control sequences out of 15000+200000
  21739 words of font info for 55 fonts, out of 3000000 for 9000
@@ -1137,9 +1137,9 @@ ecbx1200.pk><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/p
 ublic/amsfonts/cm/cmmi10.pfb><C:/Users/Valentina/AppData/Local/Programs/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Valentina/AppData/Local/
 Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on report.pdf (33 pages, 2167821 bytes).
+Output written on report.pdf (33 pages, 2172578 bytes).
 PDF statistics:
- 687 PDF objects out of 1000 (max. 8388607)
+ 690 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
